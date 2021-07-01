@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course List</title>
+
+    <link href="wwwroot/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="wwwroot/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!--<link href="wwwroot/css/main.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="styles.css"></link>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+	<link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    
+    <script src="../scripts/react.production.min.js"></script>
+    <script src="../scripts/react-dom.production.min.js"></script>
+    <script src="../scripts/babel.min.js" charset="utf-8"></script>
+
+    <script type="text/babel" src="components/Course.js"></script>
+    <script type="text/babel" src="components/CourseList.js"></script>
+    <script type="text/babel" src="components/SearchBar.js"></script>
+    <script type="text/babel" src="components/FilterableCourseList.js"></script>
+
+    <!-- TicTacToe begin-->
+    <script type="text/babel" src="components/TicTacToe.js"></script>
+    <!--<script type="text/babel" src="components/StarMatch.js"></script>-->
+    <!--<script>
+        window.addEventListener('mousedown', function(e) {
+            document.body.classList.add('mouse-navigation');
+            document.body.classList.remove('kbd-navigation');
+        });
+        window.addEventListener('keydown', function(e) {
+            if (e.keyCode === 9) {
+                document.body.classList.add('kbd-navigation');
+                document.body.classList.remove('mouse-navigation');
+            }
+        });
+        window.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
+                e.preventDefault();
+            }
+        });
+        window.onerror = function(message, source, line, col, error) {
+            var text = error ? error.stack || error : message + ' (at ' + source + ':' + line + ':' + col + ')';
+            errors.textContent += text + '\n';
+            errors.style.display = '';
+        };
+        console.error = (function(old) {
+            return function error() {
+                errors.textContent += Array.prototype.slice.call(arguments).join(' ') + '\n';
+                errors.style.display = '';
+                old.apply(this, arguments);
+            }
+        })(console.error);
+    </script>-->
+    <!-- TicTacToe end-->
+
+    <script type="text/babel">
+        const courses = [
+            {sigle: 'IFT3225', opened: true},
+            {sigle: 'IFT1015', opened: true},
+            {sigle: 'ECN1015', opened: false},
+            {sigle: 'HIS1000', opened: false}
+        ]
+
+        ReactDOM.render(
+            <FilterableCourseList courses={courses} />,
+            document.getElementById('courses')
+        )
+
+
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <p>2048</p>
+
+        <!--<div id="mountNode"></div>-->
+
+        <div id="root"></div>
+
+        <div id="courses"></div>
+    </div>
+
+
+</body>
+</html>
+
+
+
+<!--<div id="errors" style="
+        background: #c00;
+        color: #fff;
+        display: none;
+        margin: -20px -20px 20px;
+        padding: 20px;
+        white-space: pre-wrap;
+        ">
+</div>-->
