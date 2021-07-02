@@ -30,7 +30,7 @@ const utils = {
 
 const gameParams = {
     rowCount: 4,
-    colCount: 5
+    colCount: 4
 }
 
 const Square = props => (
