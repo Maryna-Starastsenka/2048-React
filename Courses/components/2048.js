@@ -29,44 +29,86 @@ const utils = {
 };
 
 const gameParams = {
-    rowCount: 4,
-    colCount: 4
+    rowCount: 2,
+    colCount: 2
 }
 
-const Square = props => (
-        <button className="square">
-            {props.row},{props.col};{props.value}
-        </button>
-)
+class Square extends React.Component {
+    handleKeyUp(event) {
+        if (event.keyCode === 13) {
+            console.log('Enter key has been pressed')
+        }
+    }
+    render() {
+        return (
+            <button className="square" onKeyUp={ this.handleKeyUp }>
+                {this.props.row},{this.props.col};{this.props.value}
+            </button>
+            )
+    }
+}
 
 class Board extends React.Component {
     SquaresDisplay = props => (
         utils.range(1, gameParams.rowCount).map(i => (
             <div className="board-row">
                 {utils.range(1, gameParams.colCount).map(j => (
-                    <Square row={i-1} col={j-1} value={this.props.squares[i-1][j-1]}/>
+                    <Square row={i - 1} col={j - 1} value={this.props.squares[i - 1][j - 1]}/>
                 ))}
             </div>
         ))
     )
 
-    render = () => (
-        <div>
-            <div className="board-row">
-                {this.SquaresDisplay()}
-            </div>
+    initBoard = (props) => {
+        const firstSquare = {
+            ...this.getRandomSquareCoordinates(),
+            value: utils.random(1, 2) * 2,
+        }
 
-        </div>
-    )
+        let secondSquareCoordinates = this.getRandomSquareCoordinates();
+
+        while (!this.isSecondSquareValid(firstSquare.row, firstSquare.col,
+            secondSquareCoordinates.row, secondSquareCoordinates.col)) {
+            secondSquareCoordinates = this.getRandomSquareCoordinates();
+        }
+        const secondSquare = {
+            ...secondSquareCoordinates,
+            value: utils.random(1, 2) * 2,
+        }
+
+        this.props.squares[firstSquare.row][firstSquare.col] = firstSquare.value;
+        this.props.squares[secondSquare.row][secondSquare.col] = secondSquare.value;
+    }
+
+    isSecondSquareValid(firstSquareRow, firstSquareCol, secondSquareRow, secondSquareCol) {
+        return !(firstSquareRow === secondSquareRow && firstSquareCol === secondSquareCol);
+    }
+
+    getRandomSquareCoordinates = () => {
+        return {
+            row: utils.random(0, gameParams.rowCount - 1),
+            col: utils.random(0, gameParams.colCount - 1),
+        }
+    }
+
+    render() {
+        this.initBoard();
+        return (
+            <div>
+                <div className="board-row">
+                    {this.SquaresDisplay()}
+                </div>
+            </div>)
+    }
 }
 
 class Game extends React.Component {
     constructor(props) {
         super(props);
 
-        var squares = new Array(gameParams.rowCount).fill(null);
+        var squares = new Array(gameParams.rowCount).fill(0);
         for (var i = 0; i < gameParams.rowCount; i++) {
-            squares[i] = new Array(gameParams.colCount).fill(null);
+            squares[i] = new Array(gameParams.colCount).fill(0);
         }
 
         this.state = {
@@ -89,5 +131,5 @@ class Game extends React.Component {
 
 // ========================================
 
-ReactDOM.render(<Game />, document.getElementById("root"));
+ReactDOM.render(<Game/>, document.getElementById("root"));
   
