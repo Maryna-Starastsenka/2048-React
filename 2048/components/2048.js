@@ -106,8 +106,8 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
 
-        var squares = new Array(gameParams.rowCount).fill(0);
-        for (var i = 0; i < gameParams.rowCount; i++) {
+        const squares = new Array(gameParams.rowCount).fill(0);
+        for (let i = 0; i < gameParams.rowCount; i++) {
             squares[i] = new Array(gameParams.colCount).fill(0);
         }
 
