@@ -30,30 +30,65 @@ const utils = {
 
 const gameParams = {
     rowCount: 2,
-    colCount: 2
+    colCount: 3
 }
 
 class Square extends React.Component {
-    handleKeyUp(event) {
-        if (event.keyCode === 13) {
-            console.log('Enter key has been pressed')
+
+    /*
+    test(props) {
+        if (this.props.col === 0) {
+            console.log("class square")
+            console.log(this.props.value)
         }
     }
+     */
+
+    /*
+    movingLeft = () => {
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            for (let j = 0; j < gameParams.colCount; j++) {
+                let offset = 0;
+                // impirme la valeur du bouton chosi
+                console.log(this.props.value)
+                if (this.props.row === i && this.props.col === j && this.props.value > 0) {
+                    this.setState({col: offset})
+                }
+            }
+        }
+    }
+    */
+
     render() {
+        //this.test()
         return (
-            <button className="square" onKeyUp={ this.handleKeyUp }>
+            <button className="square">
                 {this.props.row},{this.props.col};{this.props.value}
             </button>
-            )
+        )
     }
 }
 
 class Board extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleKeyPress = this.handleKeyPress.bind(this)
+        //debugger
+        //console.log(this.props.squares[0][0])
+        //console.log(this.props.squares[1][0])
+    }
+
+
     SquaresDisplay = props => (
         utils.range(1, gameParams.rowCount).map(i => (
             <div className="board-row">
                 {utils.range(1, gameParams.colCount).map(j => (
-                    <Square row={i - 1} col={j - 1} value={this.props.squares[i - 1][j - 1]}/>
+                    <Square
+                        row={i - 1}
+                        col={j - 1}
+                        value={this.props.squares[i - 1][j - 1]}
+                    />
                 ))}
             </div>
         ))
@@ -78,6 +113,7 @@ class Board extends React.Component {
 
         this.props.squares[firstSquare.row][firstSquare.col] = firstSquare.value;
         this.props.squares[secondSquare.row][secondSquare.col] = secondSquare.value;
+        //console.log(this.props.squares[secondSquare.row][secondSquare.col])
     }
 
     isSecondSquareValid(firstSquareRow, firstSquareCol, secondSquareRow, secondSquareCol) {
@@ -91,11 +127,54 @@ class Board extends React.Component {
         }
     }
 
+    handleKeyPress(event) {
+        switch (event.keyCode) {
+            case 37:
+                console.log('LEFT key has been pressed')
+                this.movingLeft()
+                //debugger
+                break;
+            case 38:
+                console.log('UP key has been pressed')
+                break;
+            case 39:
+                console.log('RIGHT key has been pressed')
+                break;
+            case 40:
+                console.log('DOWN key has been pressed')
+                break;
+            default:
+                console.log('Wrong key')
+        }
+    }
+
+    movingLeft = (props) => {
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            for (let j = 0; j < gameParams.colCount; j++) {
+                let offset = 0;
+                let currentSquareVal = this.props.squares[i][j];
+                debugger
+                if (currentSquareVal > 0) {
+                    console.log(this.props.squares[i][j])
+                    this.setState({row: i, col: offset, value: currentSquareVal})
+                    //this.props.squares[i][offset] = this.props.squares[i][j]
+                    //debugger
+                    if (j > offset) {
+                        this.setState({row: i, col: j, value: 0})
+                        //this.props.squares[i][j] = 0;
+                        //this.setState({value: 0})
+                    }
+                    offset++;
+                }
+            }
+        }
+    }
+
     render() {
         this.initBoard();
         return (
             <div>
-                <div className="board-row">
+                <div className="board-row" onKeyUp={this.handleKeyPress}>
                     {this.SquaresDisplay()}
                 </div>
             </div>)
@@ -105,12 +184,10 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props);
-
         const squares = new Array(gameParams.rowCount).fill(0);
         for (let i = 0; i < gameParams.rowCount; i++) {
             squares[i] = new Array(gameParams.colCount).fill(0);
         }
-
         this.state = {
             squares: squares,
         };
