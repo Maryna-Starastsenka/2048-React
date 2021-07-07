@@ -34,33 +34,7 @@ const gameParams = {
 }
 
 class Square extends React.Component {
-
-    /*
-    test(props) {
-        if (this.props.col === 0) {
-            console.log("class square")
-            console.log(this.props.value)
-        }
-    }
-     */
-
-    /*
-    movingLeft = () => {
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            for (let j = 0; j < gameParams.colCount; j++) {
-                let offset = 0;
-                // impirme la valeur du bouton chosi
-                console.log(this.props.value)
-                if (this.props.row === i && this.props.col === j && this.props.value > 0) {
-                    this.setState({col: offset})
-                }
-            }
-        }
-    }
-    */
-
     render() {
-        //this.test()
         return (
             <button className="square">
                 {this.props.row},{this.props.col};{this.props.value}
@@ -70,15 +44,6 @@ class Square extends React.Component {
 }
 
 class Board extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.handleKeyPress = this.handleKeyPress.bind(this)
-        //debugger
-        //console.log(this.props.squares[0][0])
-        //console.log(this.props.squares[1][0])
-    }
-
 
     SquaresDisplay = props => (
         utils.range(1, gameParams.rowCount).map(i => (
@@ -113,7 +78,6 @@ class Board extends React.Component {
 
         this.props.squares[firstSquare.row][firstSquare.col] = firstSquare.value;
         this.props.squares[secondSquare.row][secondSquare.col] = secondSquare.value;
-        //console.log(this.props.squares[secondSquare.row][secondSquare.col])
     }
 
     isSecondSquareValid(firstSquareRow, firstSquareCol, secondSquareRow, secondSquareCol) {
@@ -127,54 +91,11 @@ class Board extends React.Component {
         }
     }
 
-    handleKeyPress(event) {
-        switch (event.keyCode) {
-            case 37:
-                console.log('LEFT key has been pressed')
-                this.movingLeft()
-                //debugger
-                break;
-            case 38:
-                console.log('UP key has been pressed')
-                break;
-            case 39:
-                console.log('RIGHT key has been pressed')
-                break;
-            case 40:
-                console.log('DOWN key has been pressed')
-                break;
-            default:
-                console.log('Wrong key')
-        }
-    }
-
-    movingLeft = (props) => {
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            for (let j = 0; j < gameParams.colCount; j++) {
-                let offset = 0;
-                let currentSquareVal = this.props.squares[i][j];
-                debugger
-                if (currentSquareVal > 0) {
-                    console.log(this.props.squares[i][j])
-                    this.setState({row: i, col: offset, value: currentSquareVal})
-                    //this.props.squares[i][offset] = this.props.squares[i][j]
-                    //debugger
-                    if (j > offset) {
-                        this.setState({row: i, col: j, value: 0})
-                        //this.props.squares[i][j] = 0;
-                        //this.setState({value: 0})
-                    }
-                    offset++;
-                }
-            }
-        }
-    }
-
     render() {
         this.initBoard();
         return (
             <div>
-                <div className="board-row" onKeyUp={this.handleKeyPress}>
+                <div className="board-row">
                     {this.SquaresDisplay()}
                 </div>
             </div>)
@@ -193,9 +114,68 @@ class Game extends React.Component {
         };
     }
 
+    movingLeft = () => {
+        // We can check how the data should be overwritten to render it dynamically.
+        // The best solution is setState with the new data.
+        // Delete lines 122-130 when they are not needed.
+
+        const testData = new Array(gameParams.rowCount).fill(2);
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            testData[i] = new Array(gameParams.colCount).fill(2);
+        }
+        console.log('left');
+        console.log(this.state.squares);
+        console.log(testData);
+        this.setState({squares: testData});
+        console.log(this.state.squares, 'state after overwrite')
+
+        // for (let i = 0; i < gameParams.rowCount; i++) {
+        //     for (let j = 0; j < gameParams.colCount; j++) {
+        //         let offset = 0;
+        //         let currentSquareVal = this.props.squares[i][j];
+        //         debugger
+        //         if (currentSquareVal > 0) {
+        //             console.log(this.props.squares[i][j])
+        //             this.setState({row: i, col: offset, value: currentSquareVal})
+        //             //this.props.squares[i][offset] = this.props.squares[i][j]
+        //             //debugger
+        //             if (j > offset) {
+        //                 this.setState({row: i, col: j, value: 0})
+        //                 //this.props.squares[i][j] = 0;
+        //                 //this.setState({value: 0})
+        //             }
+        //             offset++;
+        //         }
+        //     }
+        // }
+    }
+
+    handleKeyPress = (event) => {
+        switch (event.keyCode) {
+            case 37:
+                console.log('LEFT key has been pressed')
+                this.movingLeft();
+                break;
+            case 38:
+                console.log('UP key has been pressed')
+                break;
+            case 39:
+                console.log('RIGHT key has been pressed')
+                break;
+            case 40:
+                console.log('DOWN key has been pressed')
+                break;
+            default:
+                console.log('Wrong key')
+        }
+    }
+
     render() {
         return (
             <div className="game">
+                <div className="header">
+                    <button onKeyUp={this.handleKeyPress}>Start</button>
+                </div>
                 <div className="game-board">
                     <Board
                         squares={this.state.squares}
