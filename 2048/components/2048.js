@@ -26,6 +26,28 @@ const utils = {
         }
         return sums[utils.random(0, sums.length - 1)];
     },
+
+    addRandomSquares: (squares, squareCount = 1) => {
+        while(squareCount > 0) {
+            const square = {
+                ...utils.getRandomSquareCoordinates(),
+                value: utils.random(1, 2) * 2,
+            }
+
+            if(squares[square.row][square.col] === 0) {
+                squares[square.row][square.col] = square.value;
+                squareCount --;
+            }
+        }
+        return squares;
+    },
+
+    getRandomSquareCoordinates: () => {
+        return {
+            row: utils.random(0, gameParams.rowCount - 1),
+            col: utils.random(0, gameParams.colCount - 1),
+        }
+    }
 };
 
 const gameParams = {
@@ -44,7 +66,6 @@ class Square extends React.Component {
 }
 
 class Board extends React.Component {
-
     SquaresDisplay = props => (
         utils.range(1, gameParams.rowCount).map(i => (
             <div className="board-row">
@@ -59,40 +80,7 @@ class Board extends React.Component {
         ))
     )
 
-    initBoard = (props) => {
-        const firstSquare = {
-            ...this.getRandomSquareCoordinates(),
-            value: utils.random(1, 2) * 2,
-        }
-
-        let secondSquareCoordinates = this.getRandomSquareCoordinates();
-
-        while (!this.isSecondSquareValid(firstSquare.row, firstSquare.col,
-            secondSquareCoordinates.row, secondSquareCoordinates.col)) {
-            secondSquareCoordinates = this.getRandomSquareCoordinates();
-        }
-        const secondSquare = {
-            ...secondSquareCoordinates,
-            value: utils.random(1, 2) * 2,
-        }
-
-        this.props.squares[firstSquare.row][firstSquare.col] = firstSquare.value;
-        this.props.squares[secondSquare.row][secondSquare.col] = secondSquare.value;
-    }
-
-    isSecondSquareValid(firstSquareRow, firstSquareCol, secondSquareRow, secondSquareCol) {
-        return !(firstSquareRow === secondSquareRow && firstSquareCol === secondSquareCol);
-    }
-
-    getRandomSquareCoordinates = () => {
-        return {
-            row: utils.random(0, gameParams.rowCount - 1),
-            col: utils.random(0, gameParams.colCount - 1),
-        }
-    }
-
     render() {
-        this.initBoard();
         return (
             <div>
                 <div className="board-row">
@@ -110,37 +98,12 @@ class Game extends React.Component {
             squares[i] = new Array(gameParams.colCount).fill(0);
         }
         this.state = {
-            squares: squares,
+            squares: utils.addRandomSquares(squares, 2),
+            stepCount: 0,
         };
     }
 
     movingLeft = () => {
-        // We can check how the data should be overwritten to render it dynamically.
-        // The best solution is setState with the new data.
-        // Delete lines 122-130 when they are not needed.
-
-        const testData = new Array(gameParams.rowCount).fill(0);
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            testData[i] = new Array(gameParams.colCount).fill(0);
-        }
-
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            let offset = 0;
-            for (let j = 0; j < gameParams.colCount; j++) {
-                if (this.state.squares[i][j] > 0) {
-                    testData[i][offset] = this.state.squares[i][j];
-                    offset++;
-                    //debugger
-                }
-            }
-        }
-
-        console.log('left');
-        console.log(this.state.squares);
-        console.log(testData);
-        this.setState({squares: testData});
-        console.log(this.state.squares, 'state after overwrite')
-
         // for (let i = 0; i < gameParams.rowCount; i++) {
         //     for (let j = 0; j < gameParams.colCount; j++) {
         //         let offset = 0;
@@ -165,18 +128,23 @@ class Game extends React.Component {
     handleKeyPress = (event) => {
         switch (event.keyCode) {
             case 37:
-                console.log('LEFT key has been pressed')
+                console.log('LEFT key has been pressed');
                 this.movingLeft();
+                this.setState({squares: utils.addRandomSquares(this.state.squares)});
                 break;
             case 38:
-                console.log('UP key has been pressed')
+                console.log('UP key has been pressed');
+                this.setState({squares: utils.addRandomSquares(this.state.squares)});
                 break;
             case 39:
-                console.log('RIGHT key has been pressed')
+                console.log('RIGHT key has been pressed');
+                this.setState({squares: utils.addRandomSquares(this.state.squares)});
                 break;
             case 40:
-                console.log('DOWN key has been pressed')
+                console.log('DOWN key has been pressed');
+                this.setState({squares: utils.addRandomSquares(this.state.squares)});
                 break;
+
             default:
                 console.log('Wrong key')
         }
