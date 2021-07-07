@@ -119,10 +119,22 @@ class Game extends React.Component {
         // The best solution is setState with the new data.
         // Delete lines 122-130 when they are not needed.
 
-        const testData = new Array(gameParams.rowCount).fill(2);
+        const testData = new Array(gameParams.rowCount).fill(0);
         for (let i = 0; i < gameParams.rowCount; i++) {
-            testData[i] = new Array(gameParams.colCount).fill(2);
+            testData[i] = new Array(gameParams.colCount).fill(0);
         }
+
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            let offset = 0;
+            for (let j = 0; j < gameParams.colCount; j++) {
+                if (this.state.squares[i][j] > 0) {
+                    testData[i][offset] = this.state.squares[i][j];
+                    offset++;
+                    //debugger
+                }
+            }
+        }
+
         console.log('left');
         console.log(this.state.squares);
         console.log(testData);
