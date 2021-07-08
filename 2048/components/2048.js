@@ -1,8 +1,8 @@
 // TODO:
 // 0. Add notification with step score +
 // 1. Score +
-// 2. Notifications for lost and win game
-// 3. Add colors for squares
+// 2. Notifications for lost and win game +
+// 3. Add colors for squares +
 // 4. Extract components
 // 5. Refactoring for functions and variables names
 // 6. General styling
@@ -58,19 +58,56 @@ const utils = {
             row: utils.random(0, gameParams.rowCount - 1),
             col: utils.random(0, gameParams.colCount - 1),
         }
+    },
+
+    getBackgroundColour: (value) => {
+        switch (value) {
+            case 2:
+                return '#EBDCD0';
+            case 4:
+                return '#E9DBBA';
+            case 8:
+                return '#E9A067';
+            case 16:
+                return '#F08151';
+            case 32:
+                return '#F2654F';
+            case 64:
+                return '#F1462C';
+            case 128:
+                return '#E7C65E';
+            case 256:
+                return '#E8C350';
+            case 512:
+                return '#E8BE40';
+            case 1024:
+                return '#E8BB31';
+            case 2048:
+                return '#E7B723';
+            default:
+                return '#C2B3A3';
+        }
+    },
+
+    getColour: (value) => {
+        return value > 4 ? '#f9f6f2' : '#776e65';
     }
 };
 
 const gameParams = {
-    rowCount: 3,
-    colCount: 3,
+    rowCount: 4,
+    colCount: 4,
 }
 
 class Square extends React.Component {
     render() {
         return (
-            <button className="square">
-                {this.props.value}
+            <button className="square"
+                    style={{
+                        background: utils.getBackgroundColour(this.props.value),
+                        color: utils.getColour(this.props.value),
+                    }}>
+                {this.props.value !== 0 ? this.props.value : null}
             </button>
         )
     }
@@ -93,7 +130,7 @@ class Board extends React.Component {
 
     render() {
         return (
-            <div>
+            <div style={{opacity: this.props.isGameOver ? '0.4' : null}}>
                 <div className="board-row">
                     {this.SquaresDisplay()}
                 </div>
@@ -139,7 +176,7 @@ class Game extends React.Component {
 
     afterSetCountFinished(score) {
         // should be 2048
-        if (score >= 32) {
+        if (score >= 2048) {
             this.setState({
                     gameWon: true
                 },
@@ -176,7 +213,7 @@ class Game extends React.Component {
             }
         }
 
-        if(!isStepSimulation) {
+        if (!isStepSimulation) {
             this.updateGameScore(stepScore);
         }
 
@@ -261,7 +298,7 @@ class Game extends React.Component {
     }
 
     handleKeyPress = (event) => {
-        if(!this.state.gameWon && !this.state.gameLost) {
+        if (!this.state.gameWon && !this.state.gameLost) {
             let newBoard;
             switch (event.keyCode) {
                 case 37:
@@ -339,12 +376,23 @@ class Game extends React.Component {
                     </div>
                     <div className="score">
                         <div>Score : {this.state.score}</div>
-                        { this.state.lastStepScore ? <div className="last-step-score">+{this.state.lastStepScore}</div> : null }
+                        {this.state.lastStepScore ?
+                            <div className="last-step-score">+{this.state.lastStepScore}</div> : null}
                     </div>
                 </div>
                 <div className="game-board">
+                    {
+                        this.state.gameLost || this.state.gameWon
+                            ? <div className="game-over-notification">
+                                <div>{ this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</div>
+                                <button onClick={this.resetGame}>OK!</button>
+
+                            </div>
+                            : null
+                    }
                     <Board
                         squares={this.state.squares}
+                        isGameOver={this.state.gameLost || this.state.gameWon}
                     />
                 </div>
             </div>

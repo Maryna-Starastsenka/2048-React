@@ -60,3 +60,14 @@ ol, ul {
 .last-step-score {
     margin-left: 0.5rem;
 }
+
+.game-over-notification {
+    position: absolute;
+    top: 17rem;
+    left: 11rem;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    z-index: 1;
+}
