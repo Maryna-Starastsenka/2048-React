@@ -28,15 +28,15 @@ const utils = {
     },
 
     addRandomSquares: (squares, squareCount = 1) => {
-        while(squareCount > 0) {
+        while (squareCount > 0) {
             const square = {
                 ...utils.getRandomSquareCoordinates(),
                 value: utils.random(1, 2) * 2,
             }
 
-            if(squares[square.row][square.col] === 0) {
+            if (squares[square.row][square.col] === 0) {
                 squares[square.row][square.col] = square.value;
-                squareCount --;
+                squareCount--;
             }
         }
         return squares;
@@ -99,37 +99,78 @@ class Game extends React.Component {
         }
         this.state = {
             squares: utils.addRandomSquares(squares, 2),
-            stepCount: 0,
+            score: 0,
+            gameWon: false,
+            gameLost: false,
         };
     }
 
-    movingLeft = () => {
-        // for (let i = 0; i < gameParams.rowCount; i++) {
-        //     for (let j = 0; j < gameParams.colCount; j++) {
-        //         let offset = 0;
-        //         let currentSquareVal = this.props.squares[i][j];
-        //         debugger
-        //         if (currentSquareVal > 0) {
-        //             console.log(this.props.squares[i][j])
-        //             this.setState({row: i, col: offset, value: currentSquareVal})
-        //             //this.props.squares[i][offset] = this.props.squares[i][j]
-        //             //debugger
-        //             if (j > offset) {
-        //                 this.setState({row: i, col: j, value: 0})
-        //                 //this.props.squares[i][j] = 0;
-        //                 //this.setState({value: 0})
-        //             }
-        //             offset++;
-        //         }
-        //     }
-        // }
+    updateGameScore = () => {
+        // TODO : update score
+        this.setState({
+                stepCount: this.state.score + 1
+            },
+            () => {
+                this.afterSetCountFinished()
+            }
+        )
+    }
+
+    afterSetCountFinished() {
+        // should be 2048
+        if (this.state.score === 32) {
+            this.setState({
+                    gameWon: true
+                },
+                () => {
+                    console.log('game won', this.state.gameWon)
+                }
+            )
+            alert('You won the game');
+        }
+    }
+
+    moveLeft = () => {
+        let newBoard = this.createNewBoard();
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            let offset = 0;
+            for (let j = 0; j < gameParams.colCount; j++) {
+                if (this.state.squares[i][j] !== 0) {
+                    newBoard[i][offset] = this.state.squares[i][j];
+                    offset++;
+                }
+            }
+        }
+
+        console.log('left');
+        console.log(this.state.squares);
+        console.log('new board', newBoard);
+        this.setState({
+                squares: newBoard
+            },
+            () => {
+                console.log('setState', this.state.squares)
+            })
+    }
+
+    moveRight = () => {
+
+    }
+
+    createNewBoard() {
+        let board = new Array(gameParams.rowCount).fill(0);
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            board[i] = new Array(gameParams.colCount).fill(0);
+        }
+        return board;
     }
 
     handleKeyPress = (event) => {
         switch (event.keyCode) {
             case 37:
                 console.log('LEFT key has been pressed');
-                this.movingLeft();
+                this.moveLeft();
+                this.updateGameScore();
                 this.setState({squares: utils.addRandomSquares(this.state.squares)});
                 break;
             case 38:
@@ -138,6 +179,8 @@ class Game extends React.Component {
                 break;
             case 39:
                 console.log('RIGHT key has been pressed');
+                this.moveRight();
+                this.updateGameScore();
                 this.setState({squares: utils.addRandomSquares(this.state.squares)});
                 break;
             case 40:
@@ -155,6 +198,7 @@ class Game extends React.Component {
             <div className="game">
                 <div className="header">
                     <button onKeyUp={this.handleKeyPress}>Start</button>
+                    <div>Score : {this.state.score}</div>
                 </div>
                 <div className="game-board">
                     <Board
@@ -164,6 +208,7 @@ class Game extends React.Component {
             </div>
         );
     }
+
 }
 
 // ========================================
