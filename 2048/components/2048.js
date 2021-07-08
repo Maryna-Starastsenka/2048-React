@@ -1,5 +1,6 @@
 // TODO:
-// 1. Score
+// 0. Add notification with step score
+// 1. Score +
 // 2. Notifications for lost and win game
 // 3. Add colors for squares
 // 4. Extract components
@@ -126,13 +127,8 @@ class Game extends React.Component {
         return false;
     }
 
-    updateGameScore = () => {
-        let score = 0;
-        this.state.squares.forEach((row) => {
-            row.forEach((square) => score += square);
-        })
-
-        this.setState({score})
+    updateGameScore = (points) => {
+        this.setState({score: this.state.score + points})
     }
 
     afterSetCountFinished() {
@@ -162,28 +158,34 @@ class Game extends React.Component {
         return newBoard;
     };
 
-    merge = (board) => {
+    merge = (board, updateScore) => {
+        let stepScore = 0;
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length - 1; j++) {
                 if (board[i][j] !== 0 && board[i][j] === board[i][j + 1]) {
                     board[i][j] = board[i][j] * 2;
                     board[i][j + 1] = 0;
+                    stepScore += board[i][j];
                 }
             }
+        }
+
+        if(updateScore) {
+            this.updateGameScore(stepScore);
         }
 
         return board;
     };
 
-    moveLeft = (board) => {
+    moveLeft = (board, updateScore = true) => {
         const newBoard1 = this.compress(board);
-        const newBoard2 = this.merge(newBoard1);
+        const newBoard2 = this.merge(newBoard1, updateScore);
         return this.compress(newBoard2);
     }
 
-    moveUp = (board) => {
+    moveUp = (board, updateScore) => {
         const rotateBoard = this.rotateLeft(board);
-        const newBoard = this.moveLeft(rotateBoard);
+        const newBoard = this.moveLeft(rotateBoard, updateScore);
         return this.rotateRight(newBoard);
     };
 
@@ -223,15 +225,15 @@ class Game extends React.Component {
         return reverseBoard;
     };
 
-    moveRight = (board) => {
+    moveRight = (board, updateScore) => {
         const reversedBoard = this.reverse(board);
-        const newBoard = this.moveLeft(reversedBoard);
+        const newBoard = this.moveLeft(reversedBoard, updateScore);
         return this.reverse(newBoard);
     }
 
-    moveDown = (board) => {
+    moveDown = (board, updateScore) => {
         const rotateBoard = this.rotateRight(board);
-        const newBoard = this.moveLeft(rotateBoard);
+        const newBoard = this.moveLeft(rotateBoard, updateScore);
         return this.rotateLeft(newBoard);
     };
 
@@ -257,35 +259,60 @@ class Game extends React.Component {
             let newBoard;
             switch (event.keyCode) {
                 case 37:
-                    console.log('LEFT key has been pressed');
                     newBoard = this.moveLeft(this.state.squares);
                     break;
                 case 38:
-                    console.log('UP key has been pressed');
                     newBoard = this.moveUp(this.state.squares);
                     break;
                 case 39:
-                    console.log('RIGHT key has been pressed');
                     newBoard = this.moveRight(this.state.squares);
                     break;
                 case 40:
-                    console.log('DOWN key has been pressed');
                     newBoard = this.moveDown(this.state.squares);
                     break;
 
                 default:
-                    console.log('Wrong key')
+                    break;
             }
             if (this.hasFreeSquares(newBoard)) {
                 this.setState({squares: utils.addRandomSquares(newBoard)});
+            } else if (!this.hasFreeSquares(newBoard) && !this.isLost(newBoard)) {
+                this.setState({squares: newBoard});
             } else {
                 this.setState({gameLost: true}, () => {
                     console.log('Game Loss');
                 })
             }
-            this.updateGameScore();
         }
     }
+
+    hasDiff = (board, updatedBoard) => {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] !== updatedBoard[i][j]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    isLost = (board) => {
+        const updateScore = false;
+        if (this.hasDiff(board, this.moveLeft(board, updateScore))) {
+            return false;
+        }
+        if (this.hasDiff(board, this.moveRight(board, updateScore))) {
+            return false;
+        }
+        if (this.hasDiff(board, this.moveUp(board, updateScore))) {
+            return false;
+        }
+        if (this.hasDiff(board, this.moveDown(board, updateScore))) {
+            return false;
+        }
+        return true;
+    };
 
     resetGame = () => {
         this.setState({
