@@ -1,3 +1,13 @@
+// TODO:
+// 1. Score
+// 2. Notifications for lost and win game
+// 3. Add colors for squares
+// 4. Extract components
+// 5. Refactoring for functions and variables names
+// 6. General styling
+// 7. Pause Button (nice to have)
+// 8. Make rotation method more general (nice to have)
+
 // Math science
 const utils = {
     // Sum an array
@@ -51,7 +61,7 @@ const utils = {
 };
 
 const gameParams = {
-    rowCount: 2,
+    rowCount: 3,
     colCount: 3,
 }
 
@@ -59,7 +69,7 @@ class Square extends React.Component {
     render() {
         return (
             <button className="square">
-                {this.props.row},{this.props.col};{this.props.value}
+                {this.props.value}
             </button>
         )
     }
@@ -171,6 +181,36 @@ class Game extends React.Component {
         return this.compress(newBoard2);
     }
 
+    moveUp = (board) => {
+        const rotateBoard = this.rotateLeft(board);
+        const newBoard = this.moveLeft(rotateBoard);
+        return this.rotateRight(newBoard);
+    };
+
+    rotateLeft = (board) => {
+        const rotateBoard = this.createEmptyBoard();
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                rotateBoard[i][j] = board[j][board[i].length - 1 - i];
+            }
+        }
+
+        return rotateBoard;
+    };
+
+    rotateRight = (board) => {
+        const rotateBoard = this.createEmptyBoard();
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                rotateBoard[i][j] = board[board[i].length - 1 - j][i];
+            }
+        }
+
+        return rotateBoard;
+    };
+
     reverse = (board) => {
         const reverseBoard = this.createEmptyBoard();
 
@@ -183,11 +223,18 @@ class Game extends React.Component {
         return reverseBoard;
     };
 
-    moveRight = () => {
-        const reversedBoard = this.reverse(this.state.squares);
+    moveRight = (board) => {
+        const reversedBoard = this.reverse(board);
         const newBoard = this.moveLeft(reversedBoard);
         return this.reverse(newBoard);
     }
+
+    moveDown = (board) => {
+        const rotateBoard = this.rotateRight(board);
+        const newBoard = this.moveLeft(rotateBoard);
+        return this.rotateLeft(newBoard);
+    };
+
 
     createEmptyBoard() {
         let board = new Array(gameParams.rowCount).fill(0);
@@ -215,15 +262,15 @@ class Game extends React.Component {
                     break;
                 case 38:
                     console.log('UP key has been pressed');
-                    this.setState({squares: utils.addRandomSquares(this.state.squares)});
+                    newBoard = this.moveUp(this.state.squares);
                     break;
                 case 39:
                     console.log('RIGHT key has been pressed');
-                    newBoard = this.moveRight();
+                    newBoard = this.moveRight(this.state.squares);
                     break;
                 case 40:
                     console.log('DOWN key has been pressed');
-                    this.setState({squares: utils.addRandomSquares(this.state.squares)});
+                    newBoard = this.moveDown(this.state.squares);
                     break;
 
                 default:
