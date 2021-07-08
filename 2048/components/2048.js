@@ -52,7 +52,7 @@ const utils = {
 
 const gameParams = {
     rowCount: 2,
-    colCount: 3
+    colCount: 3,
 }
 
 class Square extends React.Component {
@@ -105,6 +105,18 @@ class Game extends React.Component {
         };
     }
 
+    hasFreeSquares = () => {
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            for (let j = 0; j < gameParams.colCount; j++) {
+                if (this.state.squares[i][j] === 0) {
+                    return true;
+                }
+            }
+        }
+        this.setState({gameLost: true});
+        return false;
+    }
+
     updateGameScore = () => {
         // TODO : update score
         this.setState({
@@ -126,7 +138,6 @@ class Game extends React.Component {
                     console.log('game won', this.state.gameWon)
                 }
             )
-            alert('You won the game');
         }
     }
 
@@ -154,7 +165,6 @@ class Game extends React.Component {
     }
 
     moveRight = () => {
-
     }
 
     createNewBoard() {
