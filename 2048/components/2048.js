@@ -165,20 +165,28 @@ class Game extends React.Component {
         return board;
     };
 
-    moveLeft = () => {
-        const newBoard1 = this.compress(this.state.squares);
+    moveLeft = (board) => {
+        const newBoard1 = this.compress(board);
         const newBoard2 = this.merge(newBoard1);
-        const newBoard3 = this.compress(newBoard2);
-        if (this.hasFreeSquares(newBoard3)) {
-            this.setState({squares: utils.addRandomSquares(newBoard3)});
-        } else {
-            this.setState({gameLost: true}, () => {
-                console.log('Game Loss');
-            })
-        }
+        return this.compress(newBoard2);
     }
 
+    reverse = (board) => {
+        const reverseBoard = this.createEmptyBoard();
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                reverseBoard[i][j] = board[i][board[i].length - 1 - j];
+            }
+        }
+
+        return reverseBoard;
+    };
+
     moveRight = () => {
+        const reversedBoard = this.reverse(this.state.squares);
+        const newBoard = this.moveLeft(reversedBoard);
+        return this.reverse(newBoard);
     }
 
     createEmptyBoard() {
@@ -199,11 +207,11 @@ class Game extends React.Component {
 
     handleKeyPress = (event) => {
         if(!this.state.gameWon && !this.state.gameLost) {
+            let newBoard;
             switch (event.keyCode) {
                 case 37:
                     console.log('LEFT key has been pressed');
-                    this.moveLeft();
-                    this.updateGameScore();
+                    newBoard = this.moveLeft(this.state.squares);
                     break;
                 case 38:
                     console.log('UP key has been pressed');
@@ -211,9 +219,7 @@ class Game extends React.Component {
                     break;
                 case 39:
                     console.log('RIGHT key has been pressed');
-                    this.moveRight();
-                    this.updateGameScore();
-                    this.setState({squares: utils.addRandomSquares(this.state.squares)});
+                    newBoard = this.moveRight();
                     break;
                 case 40:
                     console.log('DOWN key has been pressed');
@@ -223,6 +229,14 @@ class Game extends React.Component {
                 default:
                     console.log('Wrong key')
             }
+            if (this.hasFreeSquares(newBoard)) {
+                this.setState({squares: utils.addRandomSquares(newBoard)});
+            } else {
+                this.setState({gameLost: true}, () => {
+                    console.log('Game Loss');
+                })
+            }
+            this.updateGameScore();
         }
     }
 
