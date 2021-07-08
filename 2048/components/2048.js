@@ -91,6 +91,10 @@ const utils = {
 
     getColour: (value) => {
         return value > 4 ? '#f9f6f2' : '#776e65';
+    },
+
+    getFontSize: (value) => {
+        return value >= 1000 ? '30px' : value >= 100 ? '35px' : '45px';
     }
 };
 
@@ -106,6 +110,7 @@ class Square extends React.Component {
                     style={{
                         background: utils.getBackgroundColour(this.props.value),
                         color: utils.getColour(this.props.value),
+                        fontSize: utils.getFontSize(this.props.value),
                     }}>
                 {this.props.value !== 0 ? this.props.value : null}
             </button>
@@ -131,9 +136,7 @@ class Board extends React.Component {
     render() {
         return (
             <div style={{opacity: this.props.isGameOver ? '0.4' : null}}>
-                <div className="board-row">
-                    {this.SquaresDisplay()}
-                </div>
+                {this.SquaresDisplay()}
             </div>)
     }
 }
@@ -370,22 +373,34 @@ class Game extends React.Component {
     render() {
         return (
             <div className="game">
-                <div className="header">
-                    <div>
-                        <button onKeyUp={this.handleKeyPress} onClick={this.resetGame}>New Game</button>
-                    </div>
-                    <div className="score">
-                        <div>Score : {this.state.score}</div>
-                        {this.state.lastStepScore ?
-                            <div className="last-step-score">+{this.state.lastStepScore}</div> : null}
+                <div className='header'>
+                    <div className='header__group'>
+                        <h1 className='header__title'>2048</h1>
+                        <div className='header__score-container'>
+                            <div className='header__score-box'>
+                                <span className='header__score-box__title'>SCORE</span>
+                                <div className='header__score-box__score'>
+                                    <span>{this.state.score}</span>
+                                    {this.state.lastStepScore
+                                        ? <span className='header__score-box__score__last-step'>
+                                            +{this.state.lastStepScore}</span>
+                                        : null
+                                    }
+                                </div>
+                            </div>
+                            <button className='header__button' onKeyUp={this.handleKeyPress}
+                                    onClick={this.resetGame}>New Game
+                            </button>
+                        </div>
                     </div>
                 </div>
+
                 <div className="game-board">
                     {
                         this.state.gameLost || this.state.gameWon
                             ? <div className="game-over-notification">
-                                <div>{ this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</div>
-                                <button onClick={this.resetGame}>OK!</button>
+                                <h2 className='game-over-notification__title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
+                                <button className='game-over-notification__button' onClick={this.resetGame}>OK!</button>
 
                             </div>
                             : null
