@@ -52,3 +52,11 @@ ol, ul {
 .header {
     margin-bottom: 1rem;
 }
+
+.score {
+    display: flex;
+}
+
+.last-step-score {
+    margin-left: 0.5rem;
+}

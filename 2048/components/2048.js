@@ -1,5 +1,5 @@
 // TODO:
-// 0. Add notification with step score
+// 0. Add notification with step score +
 // 1. Score +
 // 2. Notifications for lost and win game
 // 3. Add colors for squares
@@ -128,12 +128,18 @@ class Game extends React.Component {
     }
 
     updateGameScore = (points) => {
-        this.setState({score: this.state.score + points})
+        const currentScore = this.state.score + points;
+        this.setState({
+            score: currentScore,
+            lastStepScore: points
+        })
+
+        this.afterSetCountFinished(currentScore);
     }
 
-    afterSetCountFinished() {
+    afterSetCountFinished(score) {
         // should be 2048
-        if (this.state.score === 32) {
+        if (score >= 32) {
             this.setState({
                     gameWon: true
                 },
@@ -158,7 +164,7 @@ class Game extends React.Component {
         return newBoard;
     };
 
-    merge = (board, updateScore) => {
+    merge = (board, isStepSimulation) => {
         let stepScore = 0;
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length - 1; j++) {
@@ -170,22 +176,22 @@ class Game extends React.Component {
             }
         }
 
-        if(updateScore) {
+        if(!isStepSimulation) {
             this.updateGameScore(stepScore);
         }
 
         return board;
     };
 
-    moveLeft = (board, updateScore = true) => {
+    moveLeft = (board, isStepSimulation = false) => {
         const newBoard1 = this.compress(board);
-        const newBoard2 = this.merge(newBoard1, updateScore);
+        const newBoard2 = this.merge(newBoard1, isStepSimulation);
         return this.compress(newBoard2);
     }
 
-    moveUp = (board, updateScore) => {
+    moveUp = (board, isStepSimulation) => {
         const rotateBoard = this.rotateLeft(board);
-        const newBoard = this.moveLeft(rotateBoard, updateScore);
+        const newBoard = this.moveLeft(rotateBoard, isStepSimulation);
         return this.rotateRight(newBoard);
     };
 
@@ -225,15 +231,15 @@ class Game extends React.Component {
         return reverseBoard;
     };
 
-    moveRight = (board, updateScore) => {
+    moveRight = (board, isStepSimulation) => {
         const reversedBoard = this.reverse(board);
-        const newBoard = this.moveLeft(reversedBoard, updateScore);
+        const newBoard = this.moveLeft(reversedBoard, isStepSimulation);
         return this.reverse(newBoard);
     }
 
-    moveDown = (board, updateScore) => {
+    moveDown = (board, isStepSimulation) => {
         const rotateBoard = this.rotateRight(board);
-        const newBoard = this.moveLeft(rotateBoard, updateScore);
+        const newBoard = this.moveLeft(rotateBoard, isStepSimulation);
         return this.rotateLeft(newBoard);
     };
 
@@ -298,17 +304,17 @@ class Game extends React.Component {
     };
 
     isLost = (board) => {
-        const updateScore = false;
-        if (this.hasDiff(board, this.moveLeft(board, updateScore))) {
+        const isStepSimulation = true;
+        if (this.hasDiff(board, this.moveLeft(board, isStepSimulation))) {
             return false;
         }
-        if (this.hasDiff(board, this.moveRight(board, updateScore))) {
+        if (this.hasDiff(board, this.moveRight(board, isStepSimulation))) {
             return false;
         }
-        if (this.hasDiff(board, this.moveUp(board, updateScore))) {
+        if (this.hasDiff(board, this.moveUp(board, isStepSimulation))) {
             return false;
         }
-        if (this.hasDiff(board, this.moveDown(board, updateScore))) {
+        if (this.hasDiff(board, this.moveDown(board, isStepSimulation))) {
             return false;
         }
         return true;
@@ -320,6 +326,7 @@ class Game extends React.Component {
             score: 0,
             gameWon: false,
             gameLost: false,
+            lastStepScore: 0,
         })
     }
 
@@ -330,7 +337,10 @@ class Game extends React.Component {
                     <div>
                         <button onKeyUp={this.handleKeyPress} onClick={this.resetGame}>New Game</button>
                     </div>
-                    <div>Score : {this.state.score}</div>
+                    <div className="score">
+                        <div>Score : {this.state.score}</div>
+                        { this.state.lastStepScore ? <div className="last-step-score">+{this.state.lastStepScore}</div> : null }
+                    </div>
                 </div>
                 <div className="game-board">
                     <Board
