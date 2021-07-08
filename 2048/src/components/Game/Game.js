@@ -242,22 +242,11 @@ class Game extends React.Component {
     render() {
         return (
             <div className="game">
-                <div className='game__header'>
-                    <div className='game__header__group'>
-                        <h1 className='game__header__title'>2048</h1>
-                        <div className='game__header__score-container'>
-                            <div className='game__header__score-box'>
-                                <span className='game__header__score-box__title'>SCORE</span>
-                                <div className='game__header__score-box__score'>
-                                    <span>{this.state.score}</span>
-                                </div>
-                            </div>
-                            <button className='game__header__button' onKeyUp={this.handleKeyPress}
-                                    onClick={this.resetGame}>New Game
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <Header
+                    score={this.state.score}
+                    resetGame={this.resetGame}
+                    handleKeyPress={this.handleKeyPress}
+                />
 
                 <div className="game__board">
                     {
