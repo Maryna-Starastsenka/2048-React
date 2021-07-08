@@ -105,27 +105,24 @@ class Game extends React.Component {
         };
     }
 
-    hasFreeSquares = () => {
+    hasFreeSquares = (board) => {
         for (let i = 0; i < gameParams.rowCount; i++) {
             for (let j = 0; j < gameParams.colCount; j++) {
-                if (this.state.squares[i][j] === 0) {
+                if (board[i][j] === 0) {
                     return true;
                 }
             }
         }
-        this.setState({gameLost: true});
         return false;
     }
 
     updateGameScore = () => {
-        // TODO : update score
-        this.setState({
-                stepCount: this.state.score + 1
-            },
-            () => {
-                this.afterSetCountFinished()
-            }
-        )
+        let score = 0;
+        this.state.squares.forEach((row) => {
+            row.forEach((square) => score += square);
+        })
+
+        this.setState({score})
     }
 
     afterSetCountFinished() {
@@ -141,30 +138,55 @@ class Game extends React.Component {
         }
     }
 
-    moveLeft = () => {
-        let newBoard = this.createNewBoard();
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            let offset = 0;
-            for (let j = 0; j < gameParams.colCount; j++) {
-                if (this.state.squares[i][j] !== 0) {
-                    newBoard[i][offset] = this.state.squares[i][j];
-                    offset++;
+    compress = (board) => {
+        const newBoard = this.createEmptyBoard();
+        for (let i = 0; i < board.length; i++) {
+            let colIndex = 0;
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] !== 0) {
+                    newBoard[i][colIndex] = board[i][j];
+                    colIndex++;
+                }
+            }
+        }
+        return newBoard;
+    };
+
+    merge = (board) => {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length - 1; j++) {
+                if (board[i][j] !== 0 && board[i][j] === board[i][j + 1]) {
+                    board[i][j] = board[i][j] * 2;
+                    board[i][j + 1] = 0;
                 }
             }
         }
 
-        console.log('left');
-        console.log(this.state.squares);
-        console.log('new board', newBoard);
-        this.setState({
-                squares: newBoard
-            },
-            () => {
-                console.log('setState', this.state.squares)
+        return board;
+    };
+
+    moveLeft = () => {
+        const newBoard1 = this.compress(this.state.squares);
+        const newBoard2 = this.merge(newBoard1);
+        const newBoard3 = this.compress(newBoard2);
+        if (this.hasFreeSquares(newBoard3)) {
+            this.setState({squares: utils.addRandomSquares(newBoard3)});
+        } else {
+            this.setState({gameLost: true}, () => {
+                console.log('Game Loss');
             })
+        }
     }
 
     moveRight = () => {
+    }
+
+    createEmptyBoard() {
+        let board = new Array(gameParams.rowCount).fill(0);
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            board[i] = new Array(gameParams.colCount).fill(0);
+        }
+        return board;
     }
 
     createNewBoard() {
@@ -182,13 +204,6 @@ class Game extends React.Component {
                     console.log('LEFT key has been pressed');
                     this.moveLeft();
                     this.updateGameScore();
-                    if (this.hasFreeSquares()) {
-                        this.setState({squares: utils.addRandomSquares(this.state.squares)});
-                    } else {
-                        this.setState({gameLost: true}, () => {
-                            console.log('Game Loss');
-                        })
-                    }
                     break;
                 case 38:
                     console.log('UP key has been pressed');
