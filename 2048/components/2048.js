@@ -172,42 +172,61 @@ class Game extends React.Component {
         for (let i = 0; i < gameParams.rowCount; i++) {
             board[i] = new Array(gameParams.colCount).fill(0);
         }
-        return board;
+        return utils.addRandomSquares(board, 2);
     }
 
     handleKeyPress = (event) => {
-        switch (event.keyCode) {
-            case 37:
-                console.log('LEFT key has been pressed');
-                this.moveLeft();
-                this.updateGameScore();
-                this.setState({squares: utils.addRandomSquares(this.state.squares)});
-                break;
-            case 38:
-                console.log('UP key has been pressed');
-                this.setState({squares: utils.addRandomSquares(this.state.squares)});
-                break;
-            case 39:
-                console.log('RIGHT key has been pressed');
-                this.moveRight();
-                this.updateGameScore();
-                this.setState({squares: utils.addRandomSquares(this.state.squares)});
-                break;
-            case 40:
-                console.log('DOWN key has been pressed');
-                this.setState({squares: utils.addRandomSquares(this.state.squares)});
-                break;
+        if(!this.state.gameWon && !this.state.gameLost) {
+            switch (event.keyCode) {
+                case 37:
+                    console.log('LEFT key has been pressed');
+                    this.moveLeft();
+                    this.updateGameScore();
+                    if (this.hasFreeSquares()) {
+                        this.setState({squares: utils.addRandomSquares(this.state.squares)});
+                    } else {
+                        this.setState({gameLost: true}, () => {
+                            console.log('Game Loss');
+                        })
+                    }
+                    break;
+                case 38:
+                    console.log('UP key has been pressed');
+                    this.setState({squares: utils.addRandomSquares(this.state.squares)});
+                    break;
+                case 39:
+                    console.log('RIGHT key has been pressed');
+                    this.moveRight();
+                    this.updateGameScore();
+                    this.setState({squares: utils.addRandomSquares(this.state.squares)});
+                    break;
+                case 40:
+                    console.log('DOWN key has been pressed');
+                    this.setState({squares: utils.addRandomSquares(this.state.squares)});
+                    break;
 
-            default:
-                console.log('Wrong key')
+                default:
+                    console.log('Wrong key')
+            }
         }
+    }
+
+    resetGame = () => {
+        this.setState({
+            squares: this.createNewBoard(),
+            score: 0,
+            gameWon: false,
+            gameLost: false,
+        })
     }
 
     render() {
         return (
             <div className="game">
                 <div className="header">
-                    <button onKeyUp={this.handleKeyPress}>Start</button>
+                    <div>
+                        <button onKeyUp={this.handleKeyPress} onClick={this.resetGame}>New Game</button>
+                    </div>
                     <div>Score : {this.state.score}</div>
                 </div>
                 <div className="game-board">
