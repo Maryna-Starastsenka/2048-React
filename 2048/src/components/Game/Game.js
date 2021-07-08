@@ -4,142 +4,11 @@
 // 2. Notifications for lost and win game +
 // 3. Add colors for squares +
 // 4. Extract components
-// 5. Refactoring for functions and variables names
-// 6. General styling
+// 5. Refactoring for functions and variables names (in progress)
+// 6. General styling +
 // 7. Pause Button (nice to have)
 // 8. Make rotation method more general (nice to have)
 
-// Math science
-const utils = {
-    // Sum an array
-    sum: arr => arr.reduce((acc, curr) => acc + curr, 0),
-
-    // create an array of numbers between min and max (edges included)
-    range: (min, max) => Array.from({length: max - min + 1}, (_, i) => min + i),
-
-    // pick a random number between min and max (edges included)
-    random: (min, max) => min + Math.floor(Math.random() * (max - min + 1)),
-
-    // Given an array of numbers and a max...
-    // Pick a random sum (< max) from the set of all available sums in arr
-    randomSumIn: (arr, max) => {
-        const sets = [[]];
-        const sums = [];
-        for (let i = 0; i < arr.length; i++) {
-            for (let j = 0, len = sets.length; j < len; j++) {
-                const candidateSet = sets[j].concat(arr[i]);
-                const candidateSum = utils.sum(candidateSet);
-                if (candidateSum <= max) {
-                    sets.push(candidateSet);
-                    sums.push(candidateSum);
-                }
-            }
-        }
-        return sums[utils.random(0, sums.length - 1)];
-    },
-
-    addRandomSquares: (squares, squareCount = 1) => {
-        while (squareCount > 0) {
-            const square = {
-                ...utils.getRandomSquareCoordinates(),
-                value: utils.random(1, 2) * 2,
-            }
-
-            if (squares[square.row][square.col] === 0) {
-                squares[square.row][square.col] = square.value;
-                squareCount--;
-            }
-        }
-        return squares;
-    },
-
-    getRandomSquareCoordinates: () => {
-        return {
-            row: utils.random(0, gameParams.rowCount - 1),
-            col: utils.random(0, gameParams.colCount - 1),
-        }
-    },
-
-    getBackgroundColour: (value) => {
-        switch (value) {
-            case 2:
-                return '#EBDCD0';
-            case 4:
-                return '#E9DBBA';
-            case 8:
-                return '#E9A067';
-            case 16:
-                return '#F08151';
-            case 32:
-                return '#F2654F';
-            case 64:
-                return '#F1462C';
-            case 128:
-                return '#E7C65E';
-            case 256:
-                return '#E8C350';
-            case 512:
-                return '#E8BE40';
-            case 1024:
-                return '#E8BB31';
-            case 2048:
-                return '#E7B723';
-            default:
-                return '#C2B3A3';
-        }
-    },
-
-    getColour: (value) => {
-        return value > 4 ? '#f9f6f2' : '#776e65';
-    },
-
-    getFontSize: (value) => {
-        return value >= 1000 ? '30px' : value >= 100 ? '35px' : '45px';
-    }
-};
-
-const gameParams = {
-    rowCount: 4,
-    colCount: 4,
-}
-
-class Square extends React.Component {
-    render() {
-        return (
-            <button className="square"
-                    style={{
-                        background: utils.getBackgroundColour(this.props.value),
-                        color: utils.getColour(this.props.value),
-                        fontSize: utils.getFontSize(this.props.value),
-                    }}>
-                {this.props.value !== 0 ? this.props.value : null}
-            </button>
-        )
-    }
-}
-
-class Board extends React.Component {
-    SquaresDisplay = props => (
-        utils.range(1, gameParams.rowCount).map(i => (
-            <div className="board-row">
-                {utils.range(1, gameParams.colCount).map(j => (
-                    <Square
-                        row={i - 1}
-                        col={j - 1}
-                        value={this.props.squares[i - 1][j - 1]}
-                    />
-                ))}
-            </div>
-        ))
-    )
-
-    render() {
-        return (
-            <div style={{opacity: this.props.isGameOver ? '0.4' : null}}>
-                {this.SquaresDisplay()}
-            </div>)
-    }
-}
 
 class Game extends React.Component {
     constructor(props) {
@@ -373,34 +242,29 @@ class Game extends React.Component {
     render() {
         return (
             <div className="game">
-                <div className='header'>
-                    <div className='header__group'>
-                        <h1 className='header__title'>2048</h1>
-                        <div className='header__score-container'>
-                            <div className='header__score-box'>
-                                <span className='header__score-box__title'>SCORE</span>
-                                <div className='header__score-box__score'>
+                <div className='game__header'>
+                    <div className='game__header__group'>
+                        <h1 className='game__header__title'>2048</h1>
+                        <div className='game__header__score-container'>
+                            <div className='game__header__score-box'>
+                                <span className='game__header__score-box__title'>SCORE</span>
+                                <div className='game__header__score-box__score'>
                                     <span>{this.state.score}</span>
-                                    {this.state.lastStepScore
-                                        ? <span className='header__score-box__score__last-step'>
-                                            +{this.state.lastStepScore}</span>
-                                        : null
-                                    }
                                 </div>
                             </div>
-                            <button className='header__button' onKeyUp={this.handleKeyPress}
+                            <button className='game__header__button' onKeyUp={this.handleKeyPress}
                                     onClick={this.resetGame}>New Game
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div className="game-board">
+                <div className="game__board">
                     {
                         this.state.gameLost || this.state.gameWon
-                            ? <div className="game-over-notification">
-                                <h2 className='game-over-notification__title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
-                                <button className='game-over-notification__button' onClick={this.resetGame}>OK!</button>
+                            ? <div className="game__game-over-notification">
+                                <h2 className='game__game-over-notification__title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
+                                <button className='game__game-over-notification__button' onClick={this.resetGame}>OK!</button>
 
                             </div>
                             : null
@@ -413,10 +277,4 @@ class Game extends React.Component {
             </div>
         );
     }
-
 }
-
-// ========================================
-
-ReactDOM.render(<Game/>, document.getElementById("root"));
-  
