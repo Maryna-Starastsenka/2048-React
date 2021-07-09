@@ -7,8 +7,8 @@
 // 5. Refactoring for functions and variables names (in progress)
 // 6. General styling +
 // 7. Replace Score to Steps : done but steps are incremented when isStepStimulation = true
-// 8. Game is won then the square with value 2048 appears
-// 9. handleKeyPress doesn't work
+// 8. Game is won then the square with value 2048 appears +
+// 9. handleKeyPress doesn't work : works with Chrome
 // 10. Generate 2 random values once the start button is pressed (not before)
 // 11. Pause Button (nice to have)
 // 12. Make rotation method more general (nice to have)
@@ -40,40 +40,6 @@ class Game extends React.Component {
         return false;
     }
 
-    /*
-    updateGameSteps = (points) => {
-        const currentSteps = this.state.steps + points;
-        this.setState({
-            steps: currentSteps,
-            lastStepScore: points
-        })
-
-        this.afterSetCountFinished(currentSteps);
-    }
-*/
-/*
-    updateGameSteps = () => {
-        const currentSteps = this.state.steps + 1;
-        this.setState({
-            steps: currentSteps
-        })
-        this.afterSetCountFinished(currentSteps);
-    }
-*/
-
-
-    afterSetCountFinished(score) {
-        if (score >= 2048) {
-            this.setState({
-                    gameWon: true
-                },
-                () => {
-                    console.log('game won', this.state.gameWon)
-                }
-            )
-        }
-    }
-
     shiftLeftValues = (board, isStepSimulation) => {
         const newBoard = this.createEmptyBoard();
         let isValueShifted = false;
@@ -84,7 +50,7 @@ class Game extends React.Component {
                     newBoard[i][colIndex] = board[i][j];
                     colIndex++;
                     console.log(isStepSimulation, 'is step stimulation')
-                    if (i !== 0 && !isStepSimulation) {
+                    if (j !== 0 && !isStepSimulation) {
                         isValueShifted = true;
                     }
                     console.log(isValueShifted, 'is value shifted 1')
@@ -93,11 +59,10 @@ class Game extends React.Component {
         }
         console.log(isValueShifted, 'is value shifted 2')
         if (isValueShifted && !isStepSimulation) {
-            // TODO : not increment steps when StepSimulation
+            // TODO : not increment steps when isStepSimulation
             this.setState({
                 steps: this.state.steps + 1
             });
-            this.afterSetCountFinished(this.state.steps);
         }
         return newBoard;
     };
@@ -113,14 +78,19 @@ class Game extends React.Component {
                 }
             }
         }
-
-
-        // if (!isStepSimulation) {
-        //    this.updateGameSteps(stepScore);
-        //}
-
+        this.isWon(board);
         return board;
     };
+
+    isWon(board) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] === 32) {
+                    this.setState({gameWon: true})
+                }
+            }
+        }
+    }
 
     moveLeft = (board, isStepSimulation = false) => {
         const newBoard1 = this.shiftLeftValues(board, isStepSimulation);
@@ -142,7 +112,6 @@ class Game extends React.Component {
                 rotateBoard[i][j] = board[j][board[i].length - 1 - i];
             }
         }
-
         return rotateBoard;
     };
 
@@ -154,7 +123,6 @@ class Game extends React.Component {
                 rotateBoard[i][j] = board[board[i].length - 1 - j][i];
             }
         }
-
         return rotateBoard;
     };
 
@@ -166,7 +134,6 @@ class Game extends React.Component {
                 reverseBoard[i][j] = board[i][board[i].length - 1 - j];
             }
         }
-
         return reverseBoard;
     };
 
@@ -281,7 +248,8 @@ class Game extends React.Component {
                         this.state.gameLost || this.state.gameWon
                             ? <div className="game__game-over-notification">
                                 <h2 className='game__game-over-notification__title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
-                                <button className='game__game-over-notification__button' onClick={this.resetGame}>OK</button>
+                                <button className='game__game-over-notification__button' onClick={this.resetGame}>OK
+                                </button>
                             </div>
                             : null
                     }
