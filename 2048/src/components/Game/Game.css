@@ -5,11 +5,11 @@
     margin: auto;
 }
 
-.game__board {
+.game_board {
     position: relative;
 }
 
-.game__game-over-notification__button {
+.game_game-over-notification_button {
     background: #8f7a66;
     font-weight: bold;
     color: white;
@@ -20,7 +20,7 @@
     cursor: pointer;
 }
 
-.game__game-over-notification {
+.game_game-over-notification {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -31,7 +31,7 @@
     z-index: 1;
 }
 
-.game__game-over-notification__title {
+.game_game-over-notification_title {
     color: #787267;
     font-weight: bold;
     font-size: 40px;

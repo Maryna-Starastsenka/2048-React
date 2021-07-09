@@ -10,8 +10,9 @@
 // 8. Game is won then the square with value 2048 appears +
 // 9. handleKeyPress doesn't work : works with Chrome
 // 10. Generate 2 random values once the start button is pressed (not before)
-// 11. Pause Button (nice to have)
-// 12. Make rotation method more general (nice to have)
+// 11. Game over notification doesn't appear when gameLost, additional step is required
+// 12. Pause Button (nice to have)
+// 13. Make rotation method more general (nice to have)
 
 
 class Game extends React.Component {
@@ -56,7 +57,7 @@ class Game extends React.Component {
             }
         }
         if (isValueShifted) {
-            // TODO : not increment steps when isStepSimulation
+            // TODO : don't increment steps when isStepSimulation
             this.setState({
                 steps: this.state.steps + 1
             });
@@ -79,14 +80,42 @@ class Game extends React.Component {
         return board;
     };
 
-    isWon(board) {
+    rotateLeft = (board) => {
+        const rotatedBoard = this.createEmptyBoard();
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
-                if (board[i][j] === 2048) {
-                    this.setState({gameWon: true})
-                }
+                rotatedBoard[i][j] = board[j][board[i].length - 1 - i];
             }
         }
+        return rotatedBoard;
+    };
+
+    rotateRight = (board) => {
+        const rotatedBoard = this.createEmptyBoard();
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                rotatedBoard[i][j] = board[board[i].length - 1 - j][i];
+            }
+        }
+        return rotatedBoard;
+    };
+
+    reverseBoard = (board) => {
+        const reversedBoard = this.createEmptyBoard();
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                reversedBoard[i][j] = board[i][board[i].length - 1 - j];
+            }
+        }
+        return reversedBoard;
+    };
+
+    createEmptyBoard() {
+        let board = new Array(gameParams.rowCount).fill(0);
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            board[i] = new Array(gameParams.colCount).fill(0);
+        }
+        return board;
     }
 
     moveLeft = (board, isStepSimulation = false) => {
@@ -96,42 +125,9 @@ class Game extends React.Component {
     }
 
     moveUp = (board, isStepSimulation) => {
-        const rotateBoard = this.rotateLeft(board);
-        const newBoard = this.moveLeft(rotateBoard, isStepSimulation);
+        const rotatedBoard = this.rotateLeft(board);
+        const newBoard = this.moveLeft(rotatedBoard, isStepSimulation);
         return this.rotateRight(newBoard);
-    };
-
-    rotateLeft = (board) => {
-        const rotateBoard = this.createEmptyBoard();
-
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[i].length; j++) {
-                rotateBoard[i][j] = board[j][board[i].length - 1 - i];
-            }
-        }
-        return rotateBoard;
-    };
-
-    rotateRight = (board) => {
-        const rotateBoard = this.createEmptyBoard();
-
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[i].length; j++) {
-                rotateBoard[i][j] = board[board[i].length - 1 - j][i];
-            }
-        }
-        return rotateBoard;
-    };
-
-    reverseBoard = (board) => {
-        const reverseBoard = this.createEmptyBoard();
-
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[i].length; j++) {
-                reverseBoard[i][j] = board[i][board[i].length - 1 - j];
-            }
-        }
-        return reverseBoard;
     };
 
     moveRight = (board, isStepSimulation) => {
@@ -145,22 +141,6 @@ class Game extends React.Component {
         const newBoard = this.moveLeft(rotateBoard, isStepSimulation);
         return this.rotateLeft(newBoard);
     };
-
-    createEmptyBoard() {
-        let board = new Array(gameParams.rowCount).fill(0);
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            board[i] = new Array(gameParams.colCount).fill(0);
-        }
-        return board;
-    }
-
-    createNewBoard() {
-        let board = new Array(gameParams.rowCount).fill(0);
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            board[i] = new Array(gameParams.colCount).fill(0);
-        }
-        return utils.addRandomSquares(board, 2);
-    }
 
     handleKeyPress = (event) => {
         if (!this.state.gameWon && !this.state.gameLost) {
@@ -221,14 +201,32 @@ class Game extends React.Component {
         return true;
     };
 
+    isWon(board) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] === 2048) {
+                    this.setState({gameWon: true})
+                }
+            }
+        }
+    }
+
     resetGame = () => {
         this.setState({
-            squares: this.createNewBoard(),
+            squares: this.createInitialBoard(),
             steps: 0,
             gameWon: false,
             gameLost: false,
             lastStepScore: 0,
         })
+    }
+
+    createInitialBoard() {
+        let board = new Array(gameParams.rowCount).fill(0);
+        for (let i = 0; i < gameParams.rowCount; i++) {
+            board[i] = new Array(gameParams.colCount).fill(0);
+        }
+        return utils.addRandomSquares(board, 2);
     }
 
     render() {
@@ -240,12 +238,12 @@ class Game extends React.Component {
                     handleKeyPress={this.handleKeyPress}
                 />
 
-                <div className="game__board">
+                <div className="game_board">
                     {
                         this.state.gameLost || this.state.gameWon
-                            ? <div className="game__game-over-notification">
-                                <h2 className='game__game-over-notification__title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
-                                <button className='game__game-over-notification__button' onClick={this.resetGame}>OK
+                            ? <div className="game_game-over-notification">
+                                <h2 className='game_game-over-notification_title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
+                                <button className='game_game-over-notification_button' onClick={this.resetGame}>OK
                                 </button>
                             </div>
                             : null
