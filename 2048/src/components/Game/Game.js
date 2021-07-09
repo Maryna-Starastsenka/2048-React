@@ -3,8 +3,8 @@
 // 1. Score +
 // 2. Notifications for lost and win game +
 // 3. Add colors for squares +
-// 4. Extract components
-// 5. Refactoring for functions and variables names (in progress)
+// 4. Extract components +
+// 5. Refactoring for functions and variables names +
 // 6. General styling +
 // 7. Replace Score to Steps : done but steps are incremented when isStepStimulation = true +
 // 8. Game is won then the square with value 2048 appears +
@@ -13,7 +13,6 @@
 // 11. Game over notification doesn't appear when gameLost, additional step is required +
 // 12. Pause Button (nice to have)
 // 13. Make rotation method more general (nice to have)
-
 
 class Game extends React.Component {
     constructor(props) {
@@ -35,7 +34,7 @@ class Game extends React.Component {
             }
         }
         return false;
-    }
+    };
 
     shiftLeftValues = (board, isStepSimulation) => {
         const newBoard = this.createEmptyBoard();
@@ -49,7 +48,7 @@ class Game extends React.Component {
             }
         }
         if (!isStepSimulation) {
-            this.setState({steps: this.state.steps + 1});
+            this.setState({ steps: this.state.steps + 1 });
         }
         return newBoard;
     };
@@ -111,7 +110,7 @@ class Game extends React.Component {
         const newBoard1 = this.shiftLeftValues(board, isStepSimulation);
         const newBoard2 = this.combineValues(newBoard1);
         return this.shiftLeftValues(newBoard2, isStepSimulation);
-    }
+    };
 
     moveUp = (board, isStepSimulation) => {
         const rotatedBoard = this.rotateLeft(board);
@@ -123,7 +122,7 @@ class Game extends React.Component {
         const reversedBoard = this.reverseBoard(board);
         const newBoard = this.moveLeft(reversedBoard, isStepSimulation);
         return this.reverseBoard(newBoard);
-    }
+    };
 
     moveDown = (board, isStepSimulation) => {
         const rotateBoard = this.rotateRight(board);
@@ -151,13 +150,15 @@ class Game extends React.Component {
                     break;
             }
 
-            newBoard = this.hasFreeSquares(newBoard) ? utils.addRandomSquares(newBoard) : newBoard;
-            this.setState({squares: newBoard});
+            newBoard = this.hasFreeSquares(newBoard)
+                ? utils.addRandomSquares(newBoard)
+                : newBoard;
+            this.setState({ squares: newBoard });
             if (this.isLost(newBoard)) {
-                this.setState({gameLost: true});
+                this.setState({ gameLost: true });
             }
         }
-    }
+    };
 
     areDifferent = (board, updatedBoard) => {
         for (let i = 0; i < board.length; i++) {
@@ -191,7 +192,7 @@ class Game extends React.Component {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
                 if (board[i][j] === 2048) {
-                    this.setState({gameWon: true})
+                    this.setState({ gameWon: true });
                 }
             }
         }
@@ -204,15 +205,11 @@ class Game extends React.Component {
             gameWon: false,
             gameLost: false,
             lastStepScore: 0,
-        })
-    }
+        });
+    };
 
     createInitialBoard() {
-        let board = new Array(gameParams.rowCount).fill(0);
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            board[i] = new Array(gameParams.colCount).fill(0);
-        }
-        return utils.addRandomSquares(board, 2);
+        return utils.addRandomSquares(this.createEmptyBoard(), 2);
     }
 
     render() {
@@ -225,14 +222,12 @@ class Game extends React.Component {
                 />
 
                 <div className="game_board">
-                    {
-                        this.state.gameLost || this.state.gameWon
-                            ? <div className="game_game-over-notification">
-                                <h2 className='game_game-over-notification_title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
-                                <button className='game_game-over-notification_button' onClick={this.resetGame}>OK</button>
-                            </div>
-                            : null
-                    }
+                    {this.state.gameLost || this.state.gameWon ? (
+                        <Notification
+                            gameLost={this.state.gameLost}
+                            resetGame={this.resetGame}
+                        />
+                    ) : null}
                     <Board
                         squares={this.state.squares}
                         isGameOver={this.state.gameLost || this.state.gameWon}
@@ -243,7 +238,4 @@ class Game extends React.Component {
     }
 }
 
-ReactDOM.render(
-    <Game/>,
-    document.getElementById('root')
-);
+ReactDOM.render(<Game />, document.getElementById("root"));

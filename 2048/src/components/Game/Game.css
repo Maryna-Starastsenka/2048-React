@@ -8,33 +8,3 @@
 .game_board {
     position: relative;
 }
-
-.game_game-over-notification_button {
-    background: #8f7a66;
-    font-weight: bold;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    height: 40px;
-    margin: 10px 10px 0 10px;
-    cursor: pointer;
-}
-
-.game_game-over-notification {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 1;
-}
-
-.game_game-over-notification_title {
-    color: #787267;
-    font-weight: bold;
-    font-size: 40px;
-    margin: 0;
-    text-align: center;
-}

@@ -1,22 +1,24 @@
 class Board extends React.Component {
-    SquaresDisplay = props => (
-        utils.getArrayWithRangedNumbers(1, gameParams.rowCount).map(i => (
+    squaresDisplay = () =>
+        utils.getArrayWithRangedNumbers(1, gameParams.rowCount).map((i) => (
             <div className="board-row">
-                {utils.getArrayWithRangedNumbers(1, gameParams.colCount).map(j => (
-                    <Square
-                        row={i - 1}
-                        col={j - 1}
-                        value={this.props.squares[i - 1][j - 1]}
-                    />
-                ))}
+                {utils
+                    .getArrayWithRangedNumbers(1, gameParams.colCount)
+                    .map((j) => (
+                        <Square
+                            row={i - 1}
+                            col={j - 1}
+                            value={this.props.squares[i - 1][j - 1]}
+                        />
+                    ))}
             </div>
-        ))
-    )
+        ));
 
     render() {
         return (
-            <div style={{opacity: this.props.isGameOver ? '0.4' : null}}>
-                {this.SquaresDisplay()}
-            </div>)
+            <div style={{ opacity: this.props.isGameOver ? "0.4" : null }}>
+                {this.squaresDisplay()}
+            </div>
+        );
     }
 }
