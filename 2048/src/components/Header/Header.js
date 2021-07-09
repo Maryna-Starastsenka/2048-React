@@ -1,4 +1,9 @@
 class Header extends React.Component {
+
+    handleKeyPress = (event) => {
+        this.props.moveSquares(event);
+    }
+
     render() {
         return (
             <div className='header'>
@@ -11,7 +16,7 @@ class Header extends React.Component {
                                 <span>{this.props.steps}</span>
                             </div>
                         </div>
-                        <button className='header_button' onKeyUp={this.props.handleKeyPress}
+                        <button className='header_button' onKeyUp={this.handleKeyPress}
                                 onClick={this.props.resetGame}>New Game
                         </button>
                     </div>

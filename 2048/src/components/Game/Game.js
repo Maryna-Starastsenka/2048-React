@@ -6,11 +6,11 @@
 // 4. Extract components
 // 5. Refactoring for functions and variables names (in progress)
 // 6. General styling +
-// 7. Replace Score to Steps : done but steps are incremented when isStepStimulation = true
+// 7. Replace Score to Steps : done but steps are incremented when isStepStimulation = true +
 // 8. Game is won then the square with value 2048 appears +
-// 9. handleKeyPress doesn't work : works with Chrome
-// 10. Generate 2 random values once the start button is pressed (not before)
-// 11. Game over notification doesn't appear when gameLost, additional step is required
+// 9. handleKeyPress doesn't work : works with Chrome +
+// 10. Generate 2 random values once the start button is pressed (not before) +
+// 11. Game over notification doesn't appear when gameLost, additional step is required +
 // 12. Pause Button (nice to have)
 // 13. Make rotation method more general (nice to have)
 
@@ -18,12 +18,8 @@
 class Game extends React.Component {
     constructor(props) {
         super(props);
-        const squares = new Array(gameParams.rowCount).fill(0);
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            squares[i] = new Array(gameParams.colCount).fill(0);
-        }
         this.state = {
-            squares: utils.addRandomSquares(squares, 2),
+            squares: this.createEmptyBoard(),
             steps: 0,
             gameWon: false,
             gameLost: false,
@@ -31,8 +27,8 @@ class Game extends React.Component {
     }
 
     hasFreeSquares = (board) => {
-        for (let i = 0; i < gameParams.rowCount; i++) {
-            for (let j = 0; j < gameParams.colCount; j++) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
                 if (board[i][j] === 0) {
                     return true;
                 }
@@ -43,24 +39,17 @@ class Game extends React.Component {
 
     shiftLeftValues = (board, isStepSimulation) => {
         const newBoard = this.createEmptyBoard();
-        let isValueShifted = false;
         for (let i = 0; i < board.length; i++) {
             let colIndex = 0;
             for (let j = 0; j < board[i].length; j++) {
                 if (board[i][j] !== 0) {
                     newBoard[i][colIndex] = board[i][j];
                     colIndex++;
-                    if (j !== 0 && !isStepSimulation) {
-                        isValueShifted = true;
-                    }
                 }
             }
         }
-        if (isValueShifted) {
-            // TODO : don't increment steps when isStepSimulation
-            this.setState({
-                steps: this.state.steps + 1
-            });
+        if (!isStepSimulation) {
+            this.setState({steps: this.state.steps + 1});
         }
         return newBoard;
     };
@@ -142,33 +131,30 @@ class Game extends React.Component {
         return this.rotateLeft(newBoard);
     };
 
-    handleKeyPress = (event) => {
+    moveSquares = (event) => {
         if (!this.state.gameWon && !this.state.gameLost) {
             let newBoard;
-            switch (event.keyCode) {
-                case 37:
+            switch (event.key) {
+                case "ArrowLeft":
                     newBoard = this.moveLeft(this.state.squares);
                     break;
-                case 38:
+                case "ArrowUp":
                     newBoard = this.moveUp(this.state.squares);
                     break;
-                case 39:
+                case "ArrowRight":
                     newBoard = this.moveRight(this.state.squares);
                     break;
-                case 40:
+                case "ArrowDown":
                     newBoard = this.moveDown(this.state.squares);
                     break;
                 default:
                     break;
             }
-            if (this.hasFreeSquares(newBoard)) {
-                this.setState({squares: utils.addRandomSquares(newBoard)});
-            } else if (!this.hasFreeSquares(newBoard) && !this.isLost(newBoard)) {
-                this.setState({squares: newBoard});
-            } else {
-                this.setState({gameLost: true}, () => {
-                    console.log('Game Loss');
-                })
+
+            newBoard = this.hasFreeSquares(newBoard) ? utils.addRandomSquares(newBoard) : newBoard;
+            this.setState({squares: newBoard});
+            if (this.isLost(newBoard)) {
+                this.setState({gameLost: true});
             }
         }
     }
@@ -235,7 +221,7 @@ class Game extends React.Component {
                 <Header
                     steps={this.state.steps}
                     resetGame={this.resetGame}
-                    handleKeyPress={this.handleKeyPress}
+                    moveSquares={this.moveSquares}
                 />
 
                 <div className="game_board">
@@ -243,8 +229,7 @@ class Game extends React.Component {
                         this.state.gameLost || this.state.gameWon
                             ? <div className="game_game-over-notification">
                                 <h2 className='game_game-over-notification_title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
-                                <button className='game_game-over-notification_button' onClick={this.resetGame}>OK
-                                </button>
+                                <button className='game_game-over-notification_button' onClick={this.resetGame}>OK</button>
                             </div>
                             : null
                     }
