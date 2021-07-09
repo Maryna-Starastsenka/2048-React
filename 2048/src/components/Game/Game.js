@@ -49,16 +49,13 @@ class Game extends React.Component {
                 if (board[i][j] !== 0) {
                     newBoard[i][colIndex] = board[i][j];
                     colIndex++;
-                    console.log(isStepSimulation, 'is step stimulation')
                     if (j !== 0 && !isStepSimulation) {
                         isValueShifted = true;
                     }
-                    console.log(isValueShifted, 'is value shifted 1')
                 }
             }
         }
-        console.log(isValueShifted, 'is value shifted 2')
-        if (isValueShifted && !isStepSimulation) {
+        if (isValueShifted) {
             // TODO : not increment steps when isStepSimulation
             this.setState({
                 steps: this.state.steps + 1
@@ -85,7 +82,7 @@ class Game extends React.Component {
     isWon(board) {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
-                if (board[i][j] === 32) {
+                if (board[i][j] === 2048) {
                     this.setState({gameWon: true})
                 }
             }
