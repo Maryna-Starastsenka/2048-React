@@ -6,8 +6,12 @@
 // 4. Extract components
 // 5. Refactoring for functions and variables names (in progress)
 // 6. General styling +
-// 7. Pause Button (nice to have)
-// 8. Make rotation method more general (nice to have)
+// 7. Replace Score to Steps : done but steps are incremented when isStepStimulation = true
+// 8. Game is won then the square with value 2048 appears
+// 9. handleKeyPress doesn't work
+// 10. Generate 2 random values once the start button is pressed (not before)
+// 11. Pause Button (nice to have)
+// 12. Make rotation method more general (nice to have)
 
 
 class Game extends React.Component {
@@ -19,7 +23,7 @@ class Game extends React.Component {
         }
         this.state = {
             squares: utils.addRandomSquares(squares, 2),
-            score: 0,
+            steps: 0,
             gameWon: false,
             gameLost: false,
         };
@@ -36,18 +40,29 @@ class Game extends React.Component {
         return false;
     }
 
-    updateGameScore = (points) => {
-        const currentScore = this.state.score + points;
+    /*
+    updateGameSteps = (points) => {
+        const currentSteps = this.state.steps + points;
         this.setState({
-            score: currentScore,
+            steps: currentSteps,
             lastStepScore: points
         })
 
-        this.afterSetCountFinished(currentScore);
+        this.afterSetCountFinished(currentSteps);
     }
+*/
+/*
+    updateGameSteps = () => {
+        const currentSteps = this.state.steps + 1;
+        this.setState({
+            steps: currentSteps
+        })
+        this.afterSetCountFinished(currentSteps);
+    }
+*/
+
 
     afterSetCountFinished(score) {
-        // should be 2048
         if (score >= 2048) {
             this.setState({
                     gameWon: true
@@ -59,21 +74,35 @@ class Game extends React.Component {
         }
     }
 
-    compress = (board) => {
+    shiftLeftValues = (board, isStepSimulation) => {
         const newBoard = this.createEmptyBoard();
+        let isValueShifted = false;
         for (let i = 0; i < board.length; i++) {
             let colIndex = 0;
             for (let j = 0; j < board[i].length; j++) {
                 if (board[i][j] !== 0) {
                     newBoard[i][colIndex] = board[i][j];
                     colIndex++;
+                    console.log(isStepSimulation, 'is step stimulation')
+                    if (i !== 0 && !isStepSimulation) {
+                        isValueShifted = true;
+                    }
+                    console.log(isValueShifted, 'is value shifted 1')
                 }
             }
+        }
+        console.log(isValueShifted, 'is value shifted 2')
+        if (isValueShifted && !isStepSimulation) {
+            // TODO : not increment steps when StepSimulation
+            this.setState({
+                steps: this.state.steps + 1
+            });
+            this.afterSetCountFinished(this.state.steps);
         }
         return newBoard;
     };
 
-    merge = (board, isStepSimulation) => {
+    combineValues = (board) => {
         let stepScore = 0;
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length - 1; j++) {
@@ -85,17 +114,18 @@ class Game extends React.Component {
             }
         }
 
-        if (!isStepSimulation) {
-            this.updateGameScore(stepScore);
-        }
+
+        // if (!isStepSimulation) {
+        //    this.updateGameSteps(stepScore);
+        //}
 
         return board;
     };
 
     moveLeft = (board, isStepSimulation = false) => {
-        const newBoard1 = this.compress(board);
-        const newBoard2 = this.merge(newBoard1, isStepSimulation);
-        return this.compress(newBoard2);
+        const newBoard1 = this.shiftLeftValues(board, isStepSimulation);
+        const newBoard2 = this.combineValues(newBoard1);
+        return this.shiftLeftValues(newBoard2, isStepSimulation);
     }
 
     moveUp = (board, isStepSimulation) => {
@@ -128,7 +158,7 @@ class Game extends React.Component {
         return rotateBoard;
     };
 
-    reverse = (board) => {
+    reverseBoard = (board) => {
         const reverseBoard = this.createEmptyBoard();
 
         for (let i = 0; i < board.length; i++) {
@@ -141,9 +171,9 @@ class Game extends React.Component {
     };
 
     moveRight = (board, isStepSimulation) => {
-        const reversedBoard = this.reverse(board);
+        const reversedBoard = this.reverseBoard(board);
         const newBoard = this.moveLeft(reversedBoard, isStepSimulation);
-        return this.reverse(newBoard);
+        return this.reverseBoard(newBoard);
     }
 
     moveDown = (board, isStepSimulation) => {
@@ -151,7 +181,6 @@ class Game extends React.Component {
         const newBoard = this.moveLeft(rotateBoard, isStepSimulation);
         return this.rotateLeft(newBoard);
     };
-
 
     createEmptyBoard() {
         let board = new Array(gameParams.rowCount).fill(0);
@@ -185,7 +214,6 @@ class Game extends React.Component {
                 case 40:
                     newBoard = this.moveDown(this.state.squares);
                     break;
-
                 default:
                     break;
             }
@@ -201,7 +229,7 @@ class Game extends React.Component {
         }
     }
 
-    hasDiff = (board, updatedBoard) => {
+    areDifferent = (board, updatedBoard) => {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
                 if (board[i][j] !== updatedBoard[i][j]) {
@@ -214,16 +242,16 @@ class Game extends React.Component {
 
     isLost = (board) => {
         const isStepSimulation = true;
-        if (this.hasDiff(board, this.moveLeft(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveLeft(board, isStepSimulation))) {
             return false;
         }
-        if (this.hasDiff(board, this.moveRight(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveRight(board, isStepSimulation))) {
             return false;
         }
-        if (this.hasDiff(board, this.moveUp(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveUp(board, isStepSimulation))) {
             return false;
         }
-        if (this.hasDiff(board, this.moveDown(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveDown(board, isStepSimulation))) {
             return false;
         }
         return true;
@@ -232,7 +260,7 @@ class Game extends React.Component {
     resetGame = () => {
         this.setState({
             squares: this.createNewBoard(),
-            score: 0,
+            steps: 0,
             gameWon: false,
             gameLost: false,
             lastStepScore: 0,
@@ -243,7 +271,7 @@ class Game extends React.Component {
         return (
             <div className="game">
                 <Header
-                    score={this.state.score}
+                    steps={this.state.steps}
                     resetGame={this.resetGame}
                     handleKeyPress={this.handleKeyPress}
                 />
@@ -253,8 +281,7 @@ class Game extends React.Component {
                         this.state.gameLost || this.state.gameWon
                             ? <div className="game__game-over-notification">
                                 <h2 className='game__game-over-notification__title'>{this.state.gameLost ? 'You lost the game!' : 'You won the game!'}</h2>
-                                <button className='game__game-over-notification__button' onClick={this.resetGame}>OK!</button>
-
+                                <button className='game__game-over-notification__button' onClick={this.resetGame}>OK</button>
                             </div>
                             : null
                     }
@@ -267,3 +294,8 @@ class Game extends React.Component {
         );
     }
 }
+
+ReactDOM.render(
+    <Game/>,
+    document.getElementById('root')
+);

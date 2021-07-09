@@ -1,4 +1,4 @@
 const gameParams = {
-    rowCount: 4,
-    colCount: 4,
+    rowCount: 3,
+    colCount: 3,
 }

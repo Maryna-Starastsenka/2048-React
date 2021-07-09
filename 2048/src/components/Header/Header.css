@@ -16,7 +16,7 @@
     margin: 0;
 }
 
-.header__score-container {
+.header__steps-container {
     display: flex;
     justify-content: center;
     flex-flow: row wrap;
@@ -24,7 +24,7 @@
     width: min-content;
 }
 
-.header__score-box {
+.header__steps-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -38,11 +38,11 @@
     margin-left: 10px;
 }
 
-.header__score-box__title {
+.header__steps-box__title {
     color: #eee4da;
 }
 
-.header__score-box__score {
+.header__steps-box__score {
     display: flex;
 }
 

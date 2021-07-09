@@ -4,9 +4,9 @@ const utils = {
     getRandomNumberFromRange: (min, max) => min + Math.floor(Math.random() * (max - min + 1)),
 
     getRandomSquareCoordinates: (rowCount, colCount) => ({
-            row: utils.getRandomNumberFromRange(0, rowCount - 1),
-            col: utils.getRandomNumberFromRange(0, colCount - 1),
-        }),
+        row: utils.getRandomNumberFromRange(0, rowCount - 1),
+        col: utils.getRandomNumberFromRange(0, colCount - 1),
+    }),
 
     addRandomSquares: (squares, squareCount = 1) => {
         while (squareCount > 0) {
