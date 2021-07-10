@@ -1,7 +1,14 @@
-Steve Levesque
-1234567
+Maryna Starastsenka 
+20166402
 
-http://www-ens.iro.umontreal.ca/~levestev/exemples/react/courses/
 
-Une description pour supporter mes choix.
-Le lien URL est laissé libre comme ci-haut.
+
+Rapport :
+
+http://www-ens.iro.umontreal.ca/~starastm/2048-game/Rapport/Rapport-tp2.xhtml
+
+
+
+Code déployé sur le serveur :
+
+http://www-ens.iro.umontreal.ca/~starastm/2048-game/2048/index.xhtml
