@@ -27,14 +27,14 @@
                 <h2>Travail préparatoire</h2>
                 <div class="text-secondary">
                     <p>
-                        Le projet du TP2 demande les connaissances profondes du langage de programmation JavaScript et son framework React. 
-                        Comme c’était ma première confrontation avec React, il était important de comprendre les principes, la composition du code, 
-                        les meilleurs pratiques et les notions utilisées lors du travail avec React.  
+                        Le projet du TP2 demande des connaissances profondes du langage de programmation JavaScript et du framework React.
+                        Comme c’était ma première utilisation de React, il était important d'en comprendre les principes, la syntaxe, 
+                        les meilleures pratiques et les notions à utiliser lors de ce travail en particulier.  
                     </p>
                     <p>
-                        Alors, la première semaine du travail a compris plusieurs recherches, le suivi du cours en ligne et l’études des exemples. 
-                        La préparation de l’environnement du travail était également un point important. 
-                        Comme le codage direct sur le serveur du DIRO me semblait moins flexible, j’ai découvert l’outil WebStorm qui était plus robuste et facile à utiliser. 
+                        La première semaine de travail fut consacrée à l'apprentissage du langage et au travail de recherche associé. Il s'agissait également de participer au cours en ligne et d'en étudier les exemples présentés. 
+                        La préparation de l’environnement de travail fut également un point important à ce stade. 
+                        Comme le codage direct sur le serveur du DIRO me semblait moins flexible, j’ai découvert l’outil WebStorm qui m'est apparu plus robuste et facile à utiliser lorsqu'il s'agit de développement web.
                     </p>
                 </div>
             </div>
@@ -48,24 +48,24 @@
                     </p>
                     <ul>
                         <li>&lt;Game : composant parent du jeu qui contient la logique du jeu.</li>
-                        <li><span id="blue">&lt;Header/&gt;</span> : composant qui contient le titre du jeu, le notre de pats effectués et le bouton "New Game" pour commence une nouvelle partie.</li>    
-                        <li><span id="red">&lt;Board/&gt;</span> : composant qui contient les carrés avec des valeurs et leurs coordonnées sur le bord.</li>     
-                        <li><span id="green">&lt;Square/&gt;</span> : composant du jeu manipulé par l'utilisateur avec la valeur.</li>
-                        <li><span id="purple">&lt;Notification/&gt;</span> : composant qui affiche le message quand le jeu est perdu ou gagné.</li>
+                        <li><span id="blue">&lt;Header/&gt;</span> : composant qui contient le titre du jeu, le nombre de pas effectués et le bouton "New Game" pour commencer une nouvelle partie.</li>    
+                        <li><span id="red">&lt;Board/&gt;</span> : composant qui contient les carrés avec des valeurs et leurs coordonnées sur le board.</li>     
+                        <li><span id="green">&lt;Square/&gt;</span> : composant du jeu manipulé par l'utilisateur avec une valeur.</li>
+                        <li><span id="purple">&lt;Notification/&gt;</span> : composant qui affiche un message quand le jeu est perdu ou gagné.</li>
                     </ul>
                     <div class="image">
                         <img id="img-components" src="./images/components.png" alt="Components du jeu 2048"/>
                         <p>Figure 1 - Séparation du jeu 2048 en composants</p>
                     </div>
                     <p>
-                        Ensuite, il était important de choisit les "Props" qui sont les attributs disponibles dans le composant. 
-                        Ils permettent donc de configurer les composants et de descendre les données à travers de l’arborescence de composants.
+                        Par la suite, il a fallu choisir les "Props" qui sont les attributs disponibles dans le composant. 
+                        Ils permettent donc de configurer les composants et de faire redescendre les données au travers de l’arborescence de composants.
                     </p>
                     <p>
                         Finalement, le "State" était défini afin d’assurer la manipulation des données lors de l’utilisation du jeu.
                     </p>
                     <p>
-                        Représentons ci-dessous le diagramme qui montre les flux de données entre les composants définis encluant les flux à sens double.
+                        Représentons ci-dessous le diagramme qui montre les flux de données entre les composants définis en encluant les flux à double sens.
                     </p>
                     <div class="image">
                         <img id="diagram" src="./images/diagram.png" alt="Diagramme des flux de données entre les composants"/>
@@ -79,16 +79,16 @@
                 <h2>Difficultés rencontrées lors de la réalisation du projet</h2>
                 <div class="text-secondary">
                     <p>
-                        La difficulté principale était de définir les "Props" et le "State", ainsi que organiser la transmission de données entre les composants afin d'créer l'intéraction du jeu et afficher les changements sur l'interface.
-                        Alors, le débogage et les tests ont permis de mieux comprendre les notions de "Props" et "State".   
+                        La difficulté principale était de définir les "Props" et le "State", ainsi que d'organiser la transmission de données entre les composants afin de créer l'interaction du jeu et d'afficher les changements sur l'interface.
+                        Le débogage et les tests m'ont permis de mieux comprendre les notions de "Props" et "State".   
                     </p>
                     <p>
-                        Les manipulations avec le bord ont demandé plusieurs essais. Finalement, le bord du jeu était fait du type de matrice où chaque ligne et colonne représentent une ligne et une colonne du bord. 
-                        À chaque fois qu’on déplace les carrés ou faisons la rotation du bord, nous créons un nouveau bord rempli de zéros et, ensuite, copie les carrés du manier défini.      
+                        Les manipulations avec le board ont demandé plusieurs essais. Finalement, le board du jeu fut représenté sous la forme d'une matrice où chaque ligne et colonne représente une ligne et une colonne du board. 
+                        À chaque fois qu’on déplace les carrés ou que l'on fait une rotation du board, nous créons un nouveau board rempli de zéros, puis on copie les carrés d'une manière définie.      
                     </p>
                     <p>
-                        La création du code optimale sans répétition était un autre défi. La logique principale du jeu inclut 4 actions que l’utilisateur peut effectuer : bouger les carrés vers le gauche, le haut, le droit ou le bas. 
-                        Cela peut donner l’impression que tous les déplacements sont absolument indépendants en termes du code. Par contre, la rotation ou l’inversement du bord des carrés permet de réutiliser les mêmes fonctions.     
+                        La création d'un code optimal sans répétition était un autre défi. La logique principale du jeu inclut 4 actions que l’utilisateur peut effectuer : bouger les carrés vers la gauche, le haut, la droite ou le bas. 
+                        Cela peut donner l’impression que tous les déplacements sont absolument indépendants en termes de code. Par contre, la rotation ou le retournement des carrés du board permet de réutiliser les mêmes fonctions.     
                     </p>         
                 </div>
             </div>
@@ -97,7 +97,7 @@
             
             <div class="text-secondary">
                 <p>
-                    On peut donc conclure que le projet a permis d’acquérir les connaissances en React et la capacité de créer un programme en commençant par le découpage du jeu en composants, la définitions des "Props"  et du "State" jusqu’à la réalisation complète en utilisant du JavaScrip et CSS.  
+                    On peut donc conclure que le projet a permis d’acquérir des connaissances en React et m'a permis de créer un programme en commençant par le découpage du jeu en composants, la définitions des "Props"  et du "State" jusqu’à la réalisation complète en utilisant  JavaScript et CSS.  
                 </p>
             </div>
             <hr class="solid"/>  
@@ -106,7 +106,7 @@
                 TODO :
                 <ul>
                     <li>
-                        Choix de représenatiation que j'ai fait
+                        Choix de représentation que j'ai faits
                         <ul>
                             <li>Matrice ou table, pourquoi ? </li>
                             <li>Props and States</li>
@@ -116,7 +116,7 @@
                     </li>
                     <li>Qu'est-ce que j'ai appris lors de mon travail</li>
                     <li>Liens vers HTML, CSS, JavaScript</li>
-                    <li>Parcourir le code, renommer cernaines variables</li>
+                    <li>Parcourir le code, renommer certaines variables</li>
                     <li>Vérifier le XHTML : tous les liens sont utilisés ? Bootstrap ?</li>
                     <li>Valider 2 XHTML</li>
                     <li>README avec mon nom et les liens vers le rapport et le XHTML sur le serveur du DIRO</li>
