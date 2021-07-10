@@ -1,19 +1,3 @@
-// TODO:
-// 0. Add notification with step score +
-// 1. Score +
-// 2. Notifications for lost and win game +
-// 3. Add colors for squares +
-// 4. Extract components +
-// 5. Refactoring for functions and variables names +
-// 6. General styling +
-// 7. Replace Score to Steps : done but steps are incremented when isStepStimulation = true +
-// 8. Game is won then the square with value 2048 appears +
-// 9. handleKeyPress doesn't work : works with Chrome +
-// 10. Generate 2 random values once the start button is pressed (not before) +
-// 11. Game over notification doesn't appear when gameLost, additional step is required +
-// 12. Pause Button (nice to have)
-// 13. Make rotation method more general (nice to have)
-
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -25,42 +9,27 @@ class Game extends React.Component {
         };
     }
 
-    hasFreeSquares = (board) => {
+    shiftLeftValues = (board) => {
+        const leftShiftBoard = this.createEmptyBoard();
         for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[i][j] === 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
-
-    shiftLeftValues = (board, isStepSimulation) => {
-        const newBoard = this.createEmptyBoard();
-        for (let i = 0; i < board.length; i++) {
-            let colIndex = 0;
+            let index = 0;
             for (let j = 0; j < board[i].length; j++) {
                 if (board[i][j] !== 0) {
-                    newBoard[i][colIndex] = board[i][j];
-                    colIndex++;
+                    leftShiftBoard[i][index] = board[i][j];
+                    index++;
                 }
             }
         }
-        if (!isStepSimulation) {
-            this.setState({ steps: this.state.steps + 1 });
-        }
-        return newBoard;
+        this.setState({ steps: this.state.steps + 1 });
+        return leftShiftBoard;
     };
 
     combineValues = (board) => {
-        let stepScore = 0;
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length - 1; j++) {
                 if (board[i][j] !== 0 && board[i][j] === board[i][j + 1]) {
                     board[i][j] = board[i][j] * 2;
                     board[i][j + 1] = 0;
-                    stepScore += board[i][j];
                 }
             }
         }
@@ -75,6 +44,7 @@ class Game extends React.Component {
                 rotatedBoard[i][j] = board[j][board[i].length - 1 - i];
             }
         }
+        this.setState({ steps: this.state.steps + 1 });
         return rotatedBoard;
     };
 
@@ -106,27 +76,27 @@ class Game extends React.Component {
         return board;
     }
 
-    moveLeft = (board, isStepSimulation = false) => {
-        const newBoard1 = this.shiftLeftValues(board, isStepSimulation);
-        const newBoard2 = this.combineValues(newBoard1);
-        return this.shiftLeftValues(newBoard2, isStepSimulation);
+    moveLeft = (board) => {
+        const leftShiftBoard = this.shiftLeftValues(board);
+        const newBoard = this.combineValues(leftShiftBoard);
+        return this.shiftLeftValues(newBoard);
     };
 
-    moveUp = (board, isStepSimulation) => {
+    moveUp = (board) => {
         const rotatedBoard = this.rotateLeft(board);
-        const newBoard = this.moveLeft(rotatedBoard, isStepSimulation);
+        const newBoard = this.moveLeft(rotatedBoard);
         return this.rotateRight(newBoard);
     };
 
-    moveRight = (board, isStepSimulation) => {
+    moveRight = (board) => {
         const reversedBoard = this.reverseBoard(board);
-        const newBoard = this.moveLeft(reversedBoard, isStepSimulation);
+        const newBoard = this.moveLeft(reversedBoard);
         return this.reverseBoard(newBoard);
     };
 
-    moveDown = (board, isStepSimulation) => {
+    moveDown = (board) => {
         const rotateBoard = this.rotateRight(board);
-        const newBoard = this.moveLeft(rotateBoard, isStepSimulation);
+        const newBoard = this.moveLeft(rotateBoard);
         return this.rotateLeft(newBoard);
     };
 
@@ -149,7 +119,6 @@ class Game extends React.Component {
                 default:
                     break;
             }
-
             newBoard = this.hasFreeSquares(newBoard)
                 ? utils.addRandomSquares(newBoard)
                 : newBoard;
@@ -158,6 +127,17 @@ class Game extends React.Component {
                 this.setState({ gameLost: true });
             }
         }
+    };
+
+    hasFreeSquares = (board) => {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[i][j] === 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     };
 
     areDifferent = (board, updatedBoard) => {
@@ -172,17 +152,16 @@ class Game extends React.Component {
     };
 
     isLost = (board) => {
-        const isStepSimulation = true;
-        if (this.areDifferent(board, this.moveLeft(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveLeft(board))) {
             return false;
         }
-        if (this.areDifferent(board, this.moveRight(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveRight(board))) {
             return false;
         }
-        if (this.areDifferent(board, this.moveUp(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveUp(board))) {
             return false;
         }
-        if (this.areDifferent(board, this.moveDown(board, isStepSimulation))) {
+        if (this.areDifferent(board, this.moveDown(board))) {
             return false;
         }
         return true;
