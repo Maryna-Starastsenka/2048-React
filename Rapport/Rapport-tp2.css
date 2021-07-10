@@ -20,6 +20,10 @@
     border: 1px solid #198754;    
 }
 
+.block {
+    padding-bottom: 2rem;
+}
+
 .block h2 {
     padding: 1.5rem;
     font-size: 1.5rem;
