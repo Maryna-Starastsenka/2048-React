@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Rapport TP2</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="Rapport-tp2.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header p-3">
+                <h1>Étudiante : Maryna Starastsenka</h1>
+                <h1>Matricule : 20166402</h1>
+                <a href="#" class="text-warning">TODO: Lien vers le jeu 2048 déployé sur le serveur du DIRO</a>
+                
+            </div>
+            
+            <div class="title">
+                <h1>IFT3225 - Technologie de l'Internet</h1>
+                <h1>Rapport du TP2</h1>
+            </div>
+            
+            <div class="block">
+                <h2>Travail préparatoire</h2>
+                <div class="text-secondary">
+                    <p>
+                        Le projet du TP2 demande les connaissances profondes du langage de programmation JavaScript et son framework React. 
+                        Comme c’était ma première confrontation avec React, il était important de comprendre les principes, la composition du code, 
+                        les meilleurs pratiques et les notions utilisées lors du travail avec React.  
+                    </p>
+                    <p>
+                        Alors, la première semaine du travail a compris plusieurs recherches, le suivi du cours en ligne et l’études des exemples. 
+                        La préparation de l’environnement du travail était également un point important. 
+                        Comme le codage direct sur le serveur du DIRO me semblait moins flexible, j’ai découvert l’outil WebStorm qui était plus robuste et facile à utiliser. 
+                    </p>
+                </div>
+            </div>
+            <hr class="solid"/>
+            
+            <div class="block">
+                <h2>Choix de "Components" et définition des flux de données entre eux</h2>
+                <div class="text-secondary">
+                    <p>
+                        La première étape du travail était d’établir les "Components" de jeu 2048 à partir de l’interface donnée. Voici la liste des composants choisis pour le jeu :
+                    </p>
+                    <ul>
+                        <li>&lt;Game : composant parent du jeu qui contient la logique du jeu.</li>
+                        <li><span id="blue">&lt;Header/&gt;</span> : composant qui contient le titre du jeu, le notre de pats effectués et le bouton "New Game" pour commence une nouvelle partie.</li>    
+                        <li><span id="red">&lt;Board/&gt;</span> : composant qui contient les carrés avec des valeurs et leurs coordonnées sur le bord.</li>     
+                        <li><span id="green">&lt;Square/&gt;</span> : composant du jeu manipulé par l'utilisateur avec la valeur.</li>
+                        <li><span id="purple">&lt;Notification/&gt;</span> : composant qui affiche le message quand le jeu est perdu ou gagné.</li>
+                    </ul>
+                    <div class="image">
+                        <img id="img-components" src="./images/components.png" alt="Components du jeu 2048"/>
+                        <p>Figure 1 - Séparation du jeu 2048 en composants</p>
+                    </div>
+                    <p>
+                        Ensuite, il était important de choisit les "Props" qui sont les attributs disponibles dans le composant. 
+                        Ils permettent donc de configurer les composants et de descendre les données à travers de l’arborescence de composants.
+                    </p>
+                    <p>
+                        Finalement, le "State" était défini afin d’assurer la manipulation des données lors de l’utilisation du jeu.
+                    </p>
+                    <p>
+                        Représentons ci-dessous le diagramme qui montre les flux de données entre les composants définis encluant les flux à sens double.
+                    </p>
+                    <div class="image">
+                        <img id="diagram" src="./images/diagram.png" alt="Diagramme des flux de données entre les composants"/>
+                        <p>Figure 2 -  Diagramme des flux de données entre les composants du jeu 2048</p>
+                    </div>    
+                 </div>
+            </div>
+            <hr class="solid"/>
+            
+            <div class="block">
+                <h2>Difficultés rencontrées lors de la réalisation du projet</h2>
+                <div class="text-secondary">
+                    <p>
+                        La difficulté principale était de définir les "Props" et le "State", ainsi que organiser la transmission de données entre les composants afin d'créer l'intéraction du jeu et afficher les changements sur l'interface.
+                        Alors, le débogage et les tests ont permis de mieux comprendre les notions de "Props" et "State".   
+                    </p>
+                    <p>
+                        Les manipulations avec le bord ont demandé plusieurs essais. Finalement, le bord du jeu était fait du type de matrice où chaque ligne et colonne représentent une ligne et une colonne du bord. 
+                        À chaque fois qu’on déplace les carrés ou faisons la rotation du bord, nous créons un nouveau bord rempli de zéros et, ensuite, copie les carrés du manier défini.      
+                    </p>
+                    <p>
+                        La création du code optimale sans répétition était un autre défi. La logique principale du jeu inclut 4 actions que l’utilisateur peut effectuer : bouger les carrés vers le gauche, le haut, le droit ou le bas. 
+                        Cela peut donner l’impression que tous les déplacements sont absolument indépendants en termes du code. Par contre, la rotation ou l’inversement du bord des carrés permet de réutiliser les mêmes fonctions.     
+                    </p>         
+                </div>
+            </div>
+            <hr class="solid"/>
+            
+            
+            <div class="text-secondary">
+                <p>
+                    On peut donc conclure que le projet a permis d’acquérir les connaissances en React et la capacité de créer un programme en commençant par le découpage du jeu en composants, la définitions des "Props"  et du "State" jusqu’à la réalisation complète en utilisant du JavaScrip et CSS.  
+                </p>
+            </div>
+            <hr class="solid"/>  
+            
+            <div class="text-danger">
+                TODO :
+                <ul>
+                    <li>
+                        Choix de représenatiation que j'ai fait
+                        <ul>
+                            <li>Matrice ou table, pourquoi ? </li>
+                            <li>Props and States</li>
+                            <li>Hierarchie</li>
+                            <li>Schema React</li>
+                        </ul>
+                    </li>
+                    <li>Qu'est-ce que j'ai appris lors de mon travail</li>
+                    <li>Liens vers HTML, CSS, JavaScript</li>
+                    <li>Parcourir le code, renommer cernaines variables</li>
+                    <li>Vérifier le XHTML : tous les liens sont utilisés ? Bootstrap ?</li>
+                    <li>Valider 2 XHTML</li>
+                    <li>README avec mon nom et les liens vers le rapport et le XHTML sur le serveur du DIRO</li>
+                    <li>Rendre les fichiers publics => à vérifier que tout marche et accessible dans le navigateur</li>
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
