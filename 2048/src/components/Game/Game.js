@@ -20,7 +20,7 @@ class Game extends React.Component {
                 }
             }
         }
-        this.setState({ steps: this.state.steps + 1 });
+        this.setState({steps: this.state.steps + 1});
         return leftShiftBoard;
     };
 
@@ -44,7 +44,7 @@ class Game extends React.Component {
                 rotatedBoard[i][j] = board[j][board[i].length - 1 - i];
             }
         }
-        this.setState({ steps: this.state.steps + 1 });
+        this.setState({steps: this.state.steps + 1});
         return rotatedBoard;
     };
 
@@ -122,9 +122,9 @@ class Game extends React.Component {
             newBoard = this.hasFreeSquares(newBoard)
                 ? utils.addRandomSquares(newBoard)
                 : newBoard;
-            this.setState({ squares: newBoard });
+            this.setState({squares: newBoard});
             if (this.isLost(newBoard)) {
-                this.setState({ gameLost: true });
+                this.setState({gameLost: true});
             }
         }
     };
@@ -171,7 +171,7 @@ class Game extends React.Component {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
                 if (board[i][j] === 2048) {
-                    this.setState({ gameWon: true });
+                    this.setState({gameWon: true});
                 }
             }
         }
@@ -193,28 +193,31 @@ class Game extends React.Component {
 
     render() {
         return (
-            <div className="game">
-                <Header
-                    steps={this.state.steps}
-                    resetGame={this.resetGame}
-                    moveSquares={this.moveSquares}
-                />
-
-                <div className="game_board">
-                    {this.state.gameLost || this.state.gameWon ? (
-                        <Notification
-                            gameLost={this.state.gameLost}
-                            resetGame={this.resetGame}
-                        />
-                    ) : null}
-                    <Board
-                        squares={this.state.squares}
-                        isGameOver={this.state.gameLost || this.state.gameWon}
+            <div>
+                <Navigation/>
+                <div className="game_container">
+                    <Header
+                        steps={this.state.steps}
+                        resetGame={this.resetGame}
+                        moveSquares={this.moveSquares}
                     />
+
+                    <div className="game_board">
+                        {this.state.gameLost || this.state.gameWon ? (
+                            <Notification
+                                gameLost={this.state.gameLost}
+                                resetGame={this.resetGame}
+                            />
+                        ) : null}
+                        <Board
+                            squares={this.state.squares}
+                            isGameOver={this.state.gameLost || this.state.gameWon}
+                        />
+                    </div>
                 </div>
             </div>
         );
     }
 }
 
-ReactDOM.render(<Game />, document.getElementById("root"));
+ReactDOM.render(<Game/>, document.getElementById("root"));
