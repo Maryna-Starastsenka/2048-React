@@ -44,7 +44,7 @@ SELECT COUNT(userId) AS numberUsers FROM users;
 SELECT COUNT(userId) AS numberOnlineUsers FROM users WHERE (isOnline = True);
 
 -- best score from the table
-SELECT min(bestScore) AS score FROM users;
+SELECT MIN(bestScore) AS bestScoreFromDb FROM users;
 
 -- update user score
 UPDATE users SET bestScore = 15 WHERE (userId = 4);

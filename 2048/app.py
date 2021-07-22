@@ -23,6 +23,7 @@ sql_select_one_user = "SELECT * FROM `users` WHERE `userId` = %s"
 sql_verify_user = "SELECT * FROM `users` WHERE (`username` = %s AND `password` = %s)"
 sql_count_users = "SELECT COUNT(`userId`) AS `numberUsers` FROM `users`"
 sql_count_online_users = "SELECT COUNT(`userId`) AS `numberOnlinesers` FROM `users` WHERE `isOnline` = %s"
+sql_find_best_score = "SELECT MIN(`bestScore`) AS `bestScoreFromDb` FROM `users`"
 sql_update_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
 sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `bestScore`,`isOnline`) VALUES (%s, %s, %s, %s, %s)"
 
