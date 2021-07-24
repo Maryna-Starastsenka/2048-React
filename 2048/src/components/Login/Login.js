@@ -49,7 +49,7 @@ class Login extends React.Component {
         return (
             <div>
                 <Navigation />
-                <div className="container">
+                <div className="login_container">
                     <form className="login_form">
                         <h3>Sign in with your 2048 account</h3>
 
