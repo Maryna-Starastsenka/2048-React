@@ -26,7 +26,7 @@ sql_count_users = "SELECT COUNT(`userId`) AS `numberUsers` FROM `users`"
 sql_count_online_users = "SELECT COUNT(`userId`) AS `numberOnlinesers` FROM `users` WHERE `isOnline` = %s"
 sql_find_best_score = "SELECT MIN(`bestScore`) AS `bestScoreFromDb` FROM `users`"
 sql_update_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
-sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`,`isOnline`) VALUES (%s, %s, %s, %s)"
+sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `bestScore`, `isOnline`) VALUES (%s, %s, %s, %s, %s)"
 
 # def get_post(post_id):
 #    conn = get_db_connection("select")
@@ -43,20 +43,20 @@ app.config['SECRET_KEY'] = 'your secret key'
 
 @app.route('/users/register', methods=['POST'])
 def register():
-    username = request.get_json()['username']
-    password = request.get_json()['password']
+    username = request.get_json(force=True)['username']
+    password = request.get_json(force=True)['password']
+    isAdmin = request.get_json(force=True)['isAdmin']
+    bestScore = 0
+    isOnline = False
 
-   conn = get_db_connection("create")
-   conn.cursor().execute(sql_insert_user, (username, password, false, true))
-   conn.commit()
-   conn.execute(sql_get_user_by_username)
-   user = conn.fetchall()
-   conn.close()
+    conn = get_db_connection("create")
+    conn.cursor().execute(sql_insert_user, (username, password, isAdmin, bestScore, isOnline))
+    conn.commit()
+    conn.close()
 
+    message = 'User ' + username + ' was created'
 
-   message = 'User "' + username + '" was created' if user else 'User "' + username + '" was not created'
-
-   return jsonify({'message' : message})
+    return jsonify({'message' : message})
 
 
 # @app.route('/')

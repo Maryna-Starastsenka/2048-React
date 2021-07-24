@@ -12,8 +12,8 @@ CREATE TABLE users (
     userId INT AUTO_INCREMENT,
     username VARCHAR(30) NOT NULL,
     password VARCHAR(30) NOT NULL,
-    isAdmin BOOL DEFAULT FALSE NOT NULL,
-    bestScore INT NOT NULL CHECK (bestScore > 0),
+    isAdmin BOOL NOT NULL,
+    bestScore INT,
     isOnline BOOL NOT NULL,
     signUpDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (userId)
