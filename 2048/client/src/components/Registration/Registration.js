@@ -1,4 +1,5 @@
 class Registration extends React.Component {
+    api;
     constructor() {
         super();
 
@@ -7,6 +8,8 @@ class Registration extends React.Component {
             password: "",
             formErrors: [],
         };
+
+        this.api = new Api();
     }
 
     handleChange = (e) => {
@@ -22,7 +25,7 @@ class Registration extends React.Component {
         return this.state.formErrors.indexOf(key) !== -1;
     }
 
-    signUp = () => {
+    signUp = async () => {
         const formErrors = [];
         if (this.state.username === "") {
             formErrors.push("username");
@@ -39,7 +42,7 @@ class Registration extends React.Component {
         if (formErrors.length > 0) {
             return false;
         } else {
-            console.log(this.state);
+            await this.api.createNewUser(this.state.username, this.state.password, false);
             this.state.username = "";
             this.state.password = "";
         }
