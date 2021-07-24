@@ -10,13 +10,13 @@ class Navigation extends React.Component {
                     Home
                 </div>
                 <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/game.xhtml")}>
-                    Game
+                    Play
                 </div>
                 <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/login.xhtml")}>
-                    Login
+                    Log in
                 </div>
                 <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/registration.xhtml")}>
-                    Registration
+                    Sign up
                 </div>
                 <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/admin-dashboard.xhtml")}>
                     Admin Dashboard

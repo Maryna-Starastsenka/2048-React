@@ -51,7 +51,7 @@ class Login extends React.Component {
                 <Navigation />
                 <div className="container">
                     <form className="login_form">
-                        <h3>Log in</h3>
+                        <h3>Sign in with your 2048 account</h3>
 
                         <div className="form-group">
                             <label>Username</label>
@@ -61,7 +61,7 @@ class Login extends React.Component {
                                 className={`form-control ${
                                     this.hasError("username") ? "form-control--error" : ""
                                 }`}
-                                placeholder="Enter email"
+                                placeholder="Enter username"
                                 value={this.state.username}
                                 onChange={() => this.handleChange(event)}
                             />
@@ -102,7 +102,7 @@ class Login extends React.Component {
                             className="btn btn-dark btn-lg btn-block"
                             onClick={() => this.login()}
                         >
-                            Sign in
+                            Log in
                         </button>
                     </form>
                 </div>
