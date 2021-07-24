@@ -21,11 +21,12 @@ def get_db_connection(type):
 sql_select_all_users = "SELECT * FROM `users`"
 sql_select_one_user = "SELECT * FROM `users` WHERE `userId` = %s"
 sql_verify_user = "SELECT * FROM `users` WHERE (`username` = %s AND `password` = %s)"
+sql_get_user_by_username = "SELECT * FROM `users` WHERE `username` = %s"
 sql_count_users = "SELECT COUNT(`userId`) AS `numberUsers` FROM `users`"
 sql_count_online_users = "SELECT COUNT(`userId`) AS `numberOnlinesers` FROM `users` WHERE `isOnline` = %s"
 sql_find_best_score = "SELECT MIN(`bestScore`) AS `bestScoreFromDb` FROM `users`"
 sql_update_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
-sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `bestScore`,`isOnline`) VALUES (%s, %s, %s, %s, %s)"
+sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`,`isOnline`) VALUES (%s, %s, %s, %s)"
 
 # def get_post(post_id):
 #    conn = get_db_connection("select")
@@ -39,6 +40,23 @@ sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `best
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+
+@app.route('/users/register', methods=['POST'])
+def register():
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+
+   conn = get_db_connection("create")
+   conn.cursor().execute(sql_insert_user, (username, password, false, true))
+   conn.commit()
+   conn.execute(sql_get_user_by_username)
+   user = conn.fetchall()
+   conn.close()
+
+
+   message = 'User "' + username + '" was created' if user else 'User "' + username + '" was not created'
+
+   return jsonify({'message' : message})
 
 
 # @app.route('/')
