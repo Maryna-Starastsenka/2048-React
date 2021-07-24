@@ -1,4 +1,6 @@
 class Login extends React.Component {
+    api;
+
     constructor() {
         super();
 
@@ -7,6 +9,8 @@ class Login extends React.Component {
             password: "",
             formErrors: [],
         };
+
+        this.api = new Api();
     }
 
     handleChange = (e) => {
@@ -22,7 +26,7 @@ class Login extends React.Component {
         return this.state.formErrors.indexOf(key) !== -1;
     }
 
-    login = () => {
+    login = async () => {
         const formErrors = [];
         if (this.state.username === "") {
             formErrors.push("username");
@@ -39,7 +43,7 @@ class Login extends React.Component {
         if (formErrors.length > 0) {
             return false;
         } else {
-            console.log(this.state);
+            await this.api.loginUser(this.state.username, this.state.password);
             this.state.username = "";
             this.state.password = "";
         }

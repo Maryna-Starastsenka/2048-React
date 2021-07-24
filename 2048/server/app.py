@@ -12,7 +12,7 @@ def get_db_connection(type):
                                  cursorclass=pymysql.cursors.DictCursor)
     conn = connection.cursor()
 
-    if (type == "delete" or type == "edit" or type == "create"):
+    if (type == "delete" or type == "edit" or type == "create" or type == "selectall"):
         conn = connection
 
     return conn
@@ -57,6 +57,27 @@ def register():
     message = 'User ' + username + ' was created'
 
     return jsonify({'message' : message})
+
+@app.route('/users/login', methods=['POST'])
+def login():
+    username = request.get_json(force=True)['username']
+    password = request.get_json(force=True)['password']
+
+    conn = get_db_connection("selectall")
+    cur = conn.cursor()
+    cur.execute(sql_verify_user, (username, password))
+    res = cur.fetchone()
+    if(res) :
+        message = 'User ' + username + 'was login'
+        return jsonify({'message' : message, 'userId': res.get('userId')})
+    else :
+        message = 'Invalid username or password'
+        return jsonify({'message' : message})
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
 
 
 # @app.route('/')

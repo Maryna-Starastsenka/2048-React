@@ -15,6 +15,17 @@ class Api {
             body: JSON.stringify({ username, password, isAdmin})
         });
     }
+
+    loginUser(username, password) {
+        return fetch(this.baseUrl + 'users/login', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: JSON.stringify({ username, password })
+        });
+    }
 }
 
 
