@@ -1,35 +1,68 @@
 class AdminDashboard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            tableHeaders: [
+                {
+                    columnDef: "userId",
+                    headerName: "User ID",
+                },
+                {
+                    columnDef: "username",
+                    headerName: "Username",
+                },
+                {
+                    columnDef: "isAdmin",
+                    headerName: "Admin rights",
+                },
+                {
+                    columnDef: "bestScore",
+                    headerName: "Best Score",
+                },
+                {
+                    columnDef: "isOnline",
+                    headerName: "Online",
+                },
+                {
+                    columnDef: "signUpDate",
+                    headerName: "Signup date",
+                },
+            ],
+
+            data: [
+                {
+                    userId: "1",
+                    username: "name",
+                    isAdmin: "true",
+                    bestScore: "20",
+                    isOnline: "true",
+                    signUpDate: "10/10/2010",
+                },
+                {
+                    userId: "2",
+                    username: "name2",
+                    isAdmin: "false",
+                    bestScore: "30",
+                    isOnline: "true",
+                    signUpDate: "12/12/2012",
+                },
+            ],
+        };
+    }
+
     render() {
         return (
             <div>
-                <Navigation/>
-                <div className='admin-dashboard_container'>
+                <Navigation />
+                <div className="admin-dashboard_container">
                     <h3>Administrator Dashboard</h3>
 
                     <h4>Players</h4>
-                    <table className="table table-success table-striped table-hover">
-                        <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Username</th>
-                            <th>Admin rights</th>
-                            <th>Best score</th>
-                            <th>Online</th>
-                            <th>Signup date</th>
-                        </tr>
-                        </thead>
 
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <DynamicTable
+                        tableHeaders={this.state.tableHeaders}
+                        data={this.state.data}
+                    />
 
                     <h4>Player count</h4>
 
@@ -40,4 +73,4 @@ class AdminDashboard extends React.Component {
     }
 }
 
-ReactDOM.render(<AdminDashboard/>, document.getElementById("root"));
+ReactDOM.render(<AdminDashboard />, document.getElementById("root"));
