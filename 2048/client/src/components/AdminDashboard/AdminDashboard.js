@@ -68,11 +68,7 @@ class AdminDashboard extends React.Component {
         });
     }
 
-    sortTableByColumn(columnDef) {
-        this.sort(columnDef)
-    }
-
-    sort(columnDef) {
+    sortTableByColumn = (columnDef) => {
         this.setState(
             (prevState) => ({
                 ...prevState,
@@ -82,7 +78,6 @@ class AdminDashboard extends React.Component {
     }
 
     render() {
-        const sortTableByColumn = this.sortTableByColumn;
         return (
             <div>
                 <Navigation userId={this.state.userId} isAdmin={this.state.isAdmin} />
@@ -94,7 +89,7 @@ class AdminDashboard extends React.Component {
                     <DynamicTable
                         tableHeaders={this.state.tableHeaders}
                         data={this.state.tableData}
-                        sortTableByColumn={sortTableByColumn.bind(this)}
+                        sortTableByColumn={this.sortTableByColumn}
                     />
 
                     <h4>Player count</h4>
