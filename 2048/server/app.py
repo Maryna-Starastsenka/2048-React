@@ -128,6 +128,24 @@ def getGeneralBestScore():
 
     return jsonify(res)
 
+@app.route('/admin-dashboard/table', methods=['GET'])
+def getAdminDashBoardTable():
+
+    conn = get_db_connection('selectall')
+    cur = conn.cursor()
+    cur.execute(sql_select_all_users)
+    res = cur.fetchall()
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    for index, value in enumerate(res):
+        res[index]['isAdmin'] = bool(res[index].get('isAdmin'))
+        res[index]['isOnline'] = bool(res[index].get('isOnline'))
+
+    return jsonify(res)
+
 # @app.route('/')
 # def index():
 #     conn = get_db_connection("selectall")

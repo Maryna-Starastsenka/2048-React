@@ -50,4 +50,15 @@ class Api {
         });
         return await response.json();
     }
+
+    async getAdminDashBoardTable() {
+        const response = await fetch(this.baseUrl + 'admin-dashboard/table', {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        return await response.json();
+    }
 }

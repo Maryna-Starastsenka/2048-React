@@ -3,7 +3,7 @@ class DynamicTableBody extends React.Component {
         return (
             <tr>
                 {tableHeaders.map((tableHeader) => {
-                    return <td>{element[tableHeader.columnDef]}</td>;
+                    return <td>{`${element[tableHeader.columnDef]}`}</td>;
                 })}
             </tr>
         );

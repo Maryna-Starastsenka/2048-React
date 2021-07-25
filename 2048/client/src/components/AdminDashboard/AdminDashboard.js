@@ -1,4 +1,6 @@
 class AdminDashboard extends React.Component {
+    api;
+
     constructor(props) {
         super(props);
 
@@ -35,27 +37,32 @@ class AdminDashboard extends React.Component {
                 },
             ],
 
-            data: [
-                {
-                    userId: "1",
-                    username: "name",
-                    isAdmin: "true",
-                    bestScore: "20",
-                    isOnline: "true",
-                    signUpDate: "10/10/2010",
-                },
-                {
-                    userId: "2",
-                    username: "name2",
-                    isAdmin: "false",
-                    bestScore: "30",
-                    isOnline: "true",
-                    signUpDate: "12/12/2012",
-                },
-            ],
+            tableData: [],
+
             userId: userData ? userData.userId : null,
             isAdmin: userData ? userData.isAdmin : null,
         };
+
+        this.api = new Api();
+    }
+
+    async componentDidMount() {
+        await this.updateAdminDashBoardTableData()
+        this.tableDataId = setInterval(
+            () => this.updateAdminDashBoardTableData(),
+            10000
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.tableDataId);
+    }
+
+    async updateAdminDashBoardTableData() {
+        const tableData = await this.api.getAdminDashBoardTable();
+        this.setState({
+            tableData: tableData,
+        });
     }
 
     render() {
@@ -69,7 +76,7 @@ class AdminDashboard extends React.Component {
 
                     <DynamicTable
                         tableHeaders={this.state.tableHeaders}
-                        data={this.state.data}
+                        data={this.state.tableData}
                     />
 
                     <h4>Player count</h4>
