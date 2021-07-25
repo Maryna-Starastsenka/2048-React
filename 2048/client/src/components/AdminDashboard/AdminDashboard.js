@@ -1,6 +1,12 @@
 class AdminDashboard extends React.Component {
     constructor(props) {
         super(props);
+
+        const userDataFromLocalStorage = localStorage.getItem("user");
+        const userData = userDataFromLocalStorage
+            ? JSON.parse(atob(userDataFromLocalStorage))
+            : null;
+
         this.state = {
             tableHeaders: [
                 {
@@ -47,13 +53,15 @@ class AdminDashboard extends React.Component {
                     signUpDate: "12/12/2012",
                 },
             ],
+            userId: userData ? userData.userId : null,
+            isAdmin: userData ? userData.isAdmin : null,
         };
     }
 
     render() {
         return (
             <div>
-                <Navigation />
+                <Navigation userId={this.state.userId} isAdmin={this.state.isAdmin} />
                 <div className="admin-dashboard_container">
                     <h3>Administrator Dashboard</h3>
 
