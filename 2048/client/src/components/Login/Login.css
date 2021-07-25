@@ -11,6 +11,12 @@
     width: 25rem;
 }
 
+.login_form_confirmation-message {
+    margin: 1.5rem 0;
+    justify-content: center;
+    color: red;
+}
+
 .form_error-message {
     color: red;
     font-size: 10pt;
@@ -19,4 +25,8 @@
 .form-control--error {
     color: red;
     border-color: red;
+}
+
+.logout-btn {
+    margin-top: 1rem;
 }

@@ -4,17 +4,25 @@ class Login extends React.Component {
     constructor() {
         super();
 
+        const userDataFromLocalStorage = localStorage.getItem("user");
+        const userData = userDataFromLocalStorage
+            ? JSON.parse(atob(userDataFromLocalStorage))
+            : null;
+
         this.state = {
             username: "",
             password: "",
             formErrors: [],
+            userId: userData ? userData.userId : null,
+            isAdmin: userData ? userData.isAdmin : null,
+            message: "",
         };
 
         this.api = new Api();
     }
 
     handleChange = (e) => {
-        const { id, value } = e.target;
+        const {id, value} = e.target;
         this.setState((prevState) => ({
             ...prevState,
             [id]: value,
@@ -25,6 +33,14 @@ class Login extends React.Component {
     hasError(key) {
         return this.state.formErrors.indexOf(key) !== -1;
     }
+
+    logOut = () => {
+        localStorage.removeItem("user");
+        this.setState({
+            userId: null,
+            isAdmin: null,
+        });
+    };
 
     login = async () => {
         const formErrors = [];
@@ -49,73 +65,120 @@ class Login extends React.Component {
             );
             this.state.username = "";
             this.state.password = "";
+
+            this.setState({
+                message: response.message,
+                isAdmin: response.isAdmin,
+                userId: response.userId,
+            }, () => {
+                if(this.state.userId) {
+                    localStorage.setItem(
+                        "user",
+                        btoa(
+                            JSON.stringify({
+                                userId: this.state.userId,
+                                isAdmin: this.state.isAdmin,
+                            })
+                        )
+                    );
+                }
+            });
         }
     };
 
     render() {
         return (
             <div>
-                <Navigation />
+                <Navigation userId={this.state.userId} isAdmin={this.state.isAdmin}/>
                 <div className="login_container">
-                    <form className="login_form">
-                        <h3>Sign in with your 2048 account</h3>
+                    {!this.state.userId ? (
+                        <div className="login_form">
+                            <h3>Sign in with your 2048 account</h3>
 
-                        <div className="form-group">
-                            <label>Username</label>
-                            <input
-                                id="username"
-                                type="username"
-                                className={`form-control ${
-                                    this.hasError("username") ? "form-control--error" : ""
-                                }`}
-                                placeholder="Enter username"
-                                value={this.state.username}
-                                onChange={() => this.handleChange(event)}
-                            />
                             <div
-                                className="form_error-message"
+                                className="login_form_confirmation-message"
                                 style={{
-                                    visibility: this.hasError("username") ? "inherit" : "hidden",
+                                    display: this.state.message ? "flex" : "none",
+                                    color:
+                                        this.state.messageStatus === "Failed" ? "red" : "green",
                                 }}
                             >
-                                Username is required!
+                                {this.state.message}
                             </div>
-                        </div>
 
-                        <div className="form-group">
-                            <label>Password</label>
-                            <input
-                                id="password"
-                                type="password"
-                                className={`form-control ${
-                                    this.hasError("password") ? "form-control--error" : ""
-                                }`}
-                                placeholder="Enter password"
-                                value={this.state.password}
-                                onChange={() => this.handleChange(event)}
-                            />
-                            <div
-                                className="form_error-message"
-                                style={{
-                                    visibility: this.hasError("password") ? "inherit" : "hidden",
-                                }}
+                            <div className="form-group">
+                                <label>Username</label>
+                                <input
+                                    id="username"
+                                    type="username"
+                                    className={`form-control ${
+                                        this.hasError("username") ? "form-control--error" : ""
+                                    }`}
+                                    placeholder="Enter username"
+                                    value={this.state.username}
+                                    onChange={() => this.handleChange(event)}
+                                />
+                                <div
+                                    className="form_error-message"
+                                    style={{
+                                        visibility: this.hasError("username")
+                                            ? "inherit"
+                                            : "hidden",
+                                    }}
+                                >
+                                    Username is required!
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Password</label>
+                                <input
+                                    id="password"
+                                    type="password"
+                                    className={`form-control ${
+                                        this.hasError("password") ? "form-control--error" : ""
+                                    }`}
+                                    placeholder="Enter password"
+                                    value={this.state.password}
+                                    onChange={() => this.handleChange(event)}
+                                />
+                                <div
+                                    className="form_error-message"
+                                    style={{
+                                        visibility: this.hasError("password")
+                                            ? "inherit"
+                                            : "hidden",
+                                    }}
+                                >
+                                    Password is required!
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                className="btn btn-dark btn-lg btn-block"
+                                onClick={() => this.login()}
                             >
-                                Password is required!
-                            </div>
+                                Log in
+                            </button>
                         </div>
+                    ) : (
+                        <div className="login_form">
+                            <h3>You're already logged in</h3>
 
-                        <button
-                            type="button"
-                            className="btn btn-dark btn-lg btn-block"
-                            onClick={() => this.login()}
-                        >
-                            Log in
-                        </button>
-                    </form>
+                            <button
+                                type="button"
+                                className="btn btn-dark btn-lg btn-block logout-btn"
+                                onClick={() => this.logOut()}
+                            >
+                                Log out
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         );
     }
 }
 
-ReactDOM.render(<Login />, document.getElementById("root"));
+ReactDOM.render(<Login/>, document.getElementById("root"));

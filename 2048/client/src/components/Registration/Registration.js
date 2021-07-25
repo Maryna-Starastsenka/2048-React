@@ -163,7 +163,7 @@ class Registration extends React.Component {
 
                             <button
                                 type="button"
-                                className="btn btn-dark btn-lg btn-block"
+                                className="btn btn-dark btn-lg btn-block logout-btn"
                                 onClick={() => this.logOut()}
                             >
                                 Log out
