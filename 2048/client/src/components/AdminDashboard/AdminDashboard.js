@@ -49,7 +49,10 @@ class AdminDashboard extends React.Component {
     async componentDidMount() {
         await this.updateAdminDashBoardTableData()
         this.tableDataId = setInterval(
-            () => this.updateAdminDashBoardTableData(),
+            () => {
+                this.updateAdminDashBoardTableData();
+
+            },
             10000
         );
     }
@@ -65,7 +68,21 @@ class AdminDashboard extends React.Component {
         });
     }
 
+    sortTableByColumn(columnDef) {
+        this.sort(columnDef)
+    }
+
+    sort(columnDef) {
+        this.setState(
+            (prevState) => ({
+                ...prevState,
+                tableData: prevState.tableData.sort((a, b) => a[columnDef] - b[columnDef])
+            })
+        )
+    }
+
     render() {
+        const sortTableByColumn = this.sortTableByColumn;
         return (
             <div>
                 <Navigation userId={this.state.userId} isAdmin={this.state.isAdmin} />
@@ -77,6 +94,7 @@ class AdminDashboard extends React.Component {
                     <DynamicTable
                         tableHeaders={this.state.tableHeaders}
                         data={this.state.tableData}
+                        sortTableByColumn={sortTableByColumn.bind(this)}
                     />
 
                     <h4>Player count</h4>

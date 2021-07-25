@@ -5,7 +5,7 @@ class DynamicHeaders extends React.Component {
             <tr>
                 {this.props.tableHeaders &&
                 this.props.tableHeaders.map((tableHeader) => {
-                    return <th>{tableHeader.headerName}</th>;
+                    return <th onClick={() => this.props.sortTableByColumn(tableHeader.columnDef)}>{tableHeader.headerName}</th>;
                 })}
             </tr>
             </thead>
