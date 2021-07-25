@@ -28,4 +28,26 @@ class Api {
         });
         return await response.json();
     }
+
+    async getGeneralBestScore() {
+        const response = await fetch(this.baseUrl + `score/general-best-score`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        return await response.json();
+    }
+
+    async getUserBestScore(userId) {
+        const response = await fetch(this.baseUrl + `score?userId=${userId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        return await response.json();
+    }
 }

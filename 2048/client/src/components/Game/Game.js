@@ -1,4 +1,7 @@
 class Game extends React.Component {
+    api;
+    bestGeneralScoreId;
+
     constructor(props) {
         super(props);
 
@@ -15,6 +18,31 @@ class Game extends React.Component {
             userId: userData ? userData.userId : null,
             isAdmin: userData ? userData.isAdmin : null,
         };
+
+        this.api = new Api();
+    }
+
+    async componentDidMount() {
+        const bestScore = await this.api.getUserBestScore(this.state.userId);
+        this.setState({
+            bestScore: bestScore.bestScore,
+        });
+
+        this.bestGeneralScoreId = setInterval(
+            () => this.updateBestGeneralScore(),
+            2000
+        );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.bestGeneralScoreId);
+    }
+
+    async updateBestGeneralScore() {
+        const bestGeneralScore = await this.api.getGeneralBestScore();
+        this.setState({
+            bestGeneralScore: bestGeneralScore.bestGeneralScore,
+        });
     }
 
     shiftLeftValues = (board) => {
@@ -208,6 +236,8 @@ class Game extends React.Component {
                         steps={this.state.steps}
                         resetGame={this.resetGame}
                         moveSquares={this.moveSquares}
+                        bestScore={this.state.bestScore}
+                        bestGeneralScore={this.state.bestGeneralScore}
                     />
 
                     <div className="game_board">

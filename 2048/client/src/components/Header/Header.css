@@ -24,11 +24,16 @@
     width: min-content;
 }
 
+.header_steps-group {
+    display: flex;
+}
+
 .header_steps-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     background: #baaea0;
     color: white;
     font-size: 15px;

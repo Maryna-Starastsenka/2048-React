@@ -25,7 +25,8 @@ sql_verify_user = "SELECT * FROM `users` WHERE (`username` = %s AND `password` =
 sql_get_user_by_username = "SELECT * FROM `users` WHERE `username` = %s"
 sql_count_users = "SELECT COUNT(`userId`) AS `numberUsers` FROM `users`"
 sql_count_online_users = "SELECT COUNT(`userId`) AS `numberOnlinesers` FROM `users` WHERE `isOnline` = %s"
-sql_find_best_score = "SELECT MIN(`bestScore`) AS `bestScoreFromDb` FROM `users`"
+sql_find_best_score = "SELECT MIN(NULLIF(`bestScore`, 0)) AS `bestGeneralScore` FROM `users`"
+sql_find_user_best_score = "SELECT `bestScore` FROM `users` WHERE `userId` = %s"
 sql_update_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
 sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `bestScore`, `isOnline`) VALUES (%s, %s, %s, %s, %s)"
 
@@ -97,6 +98,35 @@ def login():
     cur.close()
     conn.commit()
     conn.close()
+
+@app.route('/score', methods=['GET'])
+def getUserBestScore():
+    userId = request.args.get("userId")
+
+    conn = get_db_connection('selectall')
+    cur = conn.cursor()
+    cur.execute(sql_find_user_best_score, (userId))
+    res = cur.fetchone()
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return jsonify(res)
+
+@app.route('/score/general-best-score', methods=['GET'])
+def getGeneralBestScore():
+
+    conn = get_db_connection('selectall')
+    cur = conn.cursor()
+    cur.execute(sql_find_best_score)
+    res = cur.fetchone()
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return jsonify(res)
 
 # @app.route('/')
 # def index():
