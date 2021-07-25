@@ -1,5 +1,6 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
+from flask_cors import CORS
 from werkzeug.exceptions import abort
 import pymysql.cursors
 
@@ -40,6 +41,8 @@ sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `best
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+CORS(app)
+
 
 @app.route('/users/register', methods=['POST'])
 def register():
@@ -49,36 +52,51 @@ def register():
     bestScore = 0
     isOnline = False
 
-    conn = get_db_connection("create")
-    conn.cursor().execute(sql_insert_user, (username, password, isAdmin, bestScore, isOnline))
-    conn.commit()
-    conn.close()
+    conn = get_db_connection('create')
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM users WHERE username = % s', username)
+    account = cur.fetchone()
+    if account:
+        message = 'Account with username ' + username \
+            + ' already exists !'
+        status = 'Failed'
+    else:
+        conn.cursor().execute(sql_insert_user, (username, password,
+                              isAdmin, bestScore, isOnline))
+        conn.commit()
+        conn.close()
 
-    message = 'User ' + username + ' was created'
+        message = 'User ' + username + ' was created'
+        status = 'Success'
 
-    return jsonify({'message' : message})
+    return jsonify({'message': message, 'status': status})
+
 
 @app.route('/users/login', methods=['POST'])
 def login():
     username = request.get_json(force=True)['username']
     password = request.get_json(force=True)['password']
 
-    conn = get_db_connection("selectall")
+    conn = get_db_connection('selectall')
     cur = conn.cursor()
     cur.execute(sql_verify_user, (username, password))
     res = cur.fetchone()
-    if(res) :
-        message = 'User ' + username + 'was login'
-        return jsonify({'message' : message, 'userId': res.get('userId')})
-    else :
+    if res:
+        message = 'User ' + username + ' has logged in'
+        if 'isAdmin' in res:
+            isAdmin = bool(res.get('isAdmin'))
+        else:
+            isAdmin = False
+
+        return jsonify({'message': message, 'userId': res.get('userId'
+                       ), 'isAdmin': isAdmin})
+    else:
         message = 'Invalid username or password'
-        return jsonify({'message' : message})
+        return jsonify({'message': message})
 
     cur.close()
     conn.commit()
     conn.close()
-
-
 
 # @app.route('/')
 # def index():

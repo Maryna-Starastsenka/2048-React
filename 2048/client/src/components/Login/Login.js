@@ -43,7 +43,10 @@ class Login extends React.Component {
         if (formErrors.length > 0) {
             return false;
         } else {
-            await this.api.loginUser(this.state.username, this.state.password);
+            const response = await this.api.loginUser(
+                this.state.username,
+                this.state.password
+            );
             this.state.username = "";
             this.state.password = "";
         }

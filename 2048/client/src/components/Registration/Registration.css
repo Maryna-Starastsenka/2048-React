@@ -11,6 +11,11 @@
     width: 25rem;
 }
 
+.sign-up_form_confirmation-message {
+    margin: 1.5rem 0;
+    justify-content: center;
+}
+
 .form_error-message {
     color: red;
     font-size: 10pt;

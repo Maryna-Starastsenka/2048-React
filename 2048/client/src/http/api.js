@@ -1,33 +1,31 @@
 class Api {
-    baseUrl = '';
+    baseUrl = "";
 
     constructor() {
         this.baseUrl = baseUrl;
     }
 
-    createNewUser(username, password, isAdmin) {
-        return fetch(this.baseUrl + 'users/register', {
-            method: 'POST',
-            mode: 'no-cors',
+    async createNewUser(username, password, isAdmin) {
+        const response = await fetch(this.baseUrl + "users/register", {
+            method: "POST",
             headers: {
-                'Content-Type': 'text/plain'
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
             },
-            body: JSON.stringify({ username, password, isAdmin})
+            body: JSON.stringify({ username, password, isAdmin }),
         });
+        return await response.json();
     }
 
-    loginUser(username, password) {
-        return fetch(this.baseUrl + 'users/login', {
-            method: 'POST',
-            mode: 'no-cors',
+    async loginUser(username, password) {
+        const response = await fetch(this.baseUrl + "users/login", {
+            method: "POST",
             headers: {
-                'Content-Type': 'text/plain'
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password }),
         });
+        return await response.json();
     }
 }
-
-
-
-

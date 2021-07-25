@@ -9,7 +9,7 @@ class Navigation extends React.Component {
                 <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/client/index.xhtml")}>
                     Home
                 </div>
-                <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/client/game.xhtml")}>
+                <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/client/game.xhtml")} style={{display: this.props.userId ? 'block' : 'none'}}>
                     Play
                 </div>
                 <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/client/login.xhtml")}>
@@ -18,7 +18,7 @@ class Navigation extends React.Component {
                 <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/client/registration.xhtml")}>
                     Sign up
                 </div>
-                <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/client/admin-dashboard.xhtml")}>
+                <div className='navigation_element' onClick={() => this.navigateTo("/2048/2048/client/admin-dashboard.xhtml")} style={{display: this.props.isAdmin ? 'block' : 'none'}}>
                     Admin Dashboard
                 </div>
             </div>
