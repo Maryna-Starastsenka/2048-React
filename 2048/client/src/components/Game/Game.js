@@ -62,7 +62,6 @@ class Game extends React.Component {
                 }
             }
         }
-        this.setState({ steps: this.state.steps + 1 });
         return leftShiftBoard;
     };
 
@@ -75,14 +74,6 @@ class Game extends React.Component {
                 }
             }
         }
-        if (this.isWon(board)) {
-            this.setState({
-                gameWon: true,
-            })
-            if (this.state.steps < this.state.bestScore || this.state.bestScore === 0) {
-                this.api.updateUserScore(this.state.steps, this.state.userId);
-            }
-        }
         return board;
     };
 
@@ -93,7 +84,6 @@ class Game extends React.Component {
                 rotatedBoard[i][j] = board[j][board[i].length - 1 - i];
             }
         }
-        this.setState({ steps: this.state.steps + 1 });
         return rotatedBoard;
     };
 
@@ -171,10 +161,23 @@ class Game extends React.Component {
             newBoard = this.hasFreeSquares(newBoard)
                 ? utils.addRandomSquares(newBoard)
                 : newBoard;
-            this.setState({ squares: newBoard });
-            if (this.isLost(newBoard)) {
-                this.setState({ gameLost: true });
+
+            const currentSteps = this.state.steps + 1;
+            const gameLost = this.isLost(newBoard)
+            const gameWon = this.isWon(newBoard);
+
+            if (gameWon) {
+                if (currentSteps < this.state.bestScore || this.state.bestScore === 0) {
+                    this.api.updateUserScore(currentSteps, this.state.userId);
+                }
             }
+
+            this.setState({
+                squares: newBoard,
+                steps: currentSteps,
+                gameWon,
+                gameLost,
+            });
         }
     };
 
