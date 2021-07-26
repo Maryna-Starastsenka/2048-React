@@ -75,7 +75,14 @@ class Game extends React.Component {
                 }
             }
         }
-        this.isWon(board);
+        if (this.isWon(board)) {
+            this.setState({
+                gameWon: true,
+            })
+            if (this.state.steps < this.state.bestScore || this.state.bestScore === 0) {
+                this.api.updateUserScore(this.state.steps, this.state.userId);
+            }
+        }
         return board;
     };
 
@@ -214,12 +221,11 @@ class Game extends React.Component {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
                 if (board[i][j] === 16) {
-                    this.setState({ gameWon: true });
-                    (this.state.steps < this.state.bestScore) ?
-                        this.api.updateUserScore(this.state.steps, this.state.userId) : null
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     resetGame = () => {

@@ -73,8 +73,8 @@ class Api {
         return await response.json();
     }
 
-    async updateUserScore(bestScore, userId) {
-        const response = await fetch(this.baseUrl + "user/edit-best-score", {
+     updateUserScore(bestScore, userId) {
+        fetch(this.baseUrl + "user/edit-best-score", {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain",
@@ -82,6 +82,5 @@ class Api {
             },
             body: JSON.stringify({ bestScore, userId }),
         });
-        return await response.json();
     }
 }
