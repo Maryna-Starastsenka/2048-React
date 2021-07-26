@@ -20,14 +20,14 @@ def get_db_connection(type):
 
 # SQL Queries
 sql_select_all_users = "SELECT * FROM `users`"
-sql_select_one_user = "SELECT * FROM `users` WHERE `userId` = %s"
+sql_select_user_by_username = "SELECT * FROM `users` WHERE `username` = %s"
 sql_verify_user = "SELECT * FROM `users` WHERE (`username` = %s AND `password` = %s)"
 sql_get_user_by_username = "SELECT * FROM `users` WHERE `username` = %s"
 sql_count_users = "SELECT COUNT(`userId`) AS `userCount` FROM `users`"
 sql_count_online_users = "SELECT COUNT(`userId`) AS `onlineUserCount` FROM `users` WHERE `isOnline` = True"
 sql_find_best_score = "SELECT MIN(NULLIF(`bestScore`, 0)) AS `bestGeneralScore` FROM `users`"
 sql_find_user_best_score = "SELECT `bestScore` FROM `users` WHERE `userId` = %s"
-sql_update_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
+sql_edit_user_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
 sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `bestScore`, `isOnline`) VALUES (%s, %s, %s, %s, %s)"
 
 # def get_post(post_id):
@@ -55,7 +55,7 @@ def register():
 
     conn = get_db_connection('create')
     cur = conn.cursor()
-    cur.execute('SELECT * FROM users WHERE username = % s', username)
+    cur.execute(sql_select_user_by_username, username)
     account = cur.fetchone()
     if account:
         message = 'Account with username ' + username \
@@ -163,6 +163,23 @@ def getUserCount():
     return jsonify(
         dict(userCount, **onlineUserCount)
     )
+
+@app.route('/user/edit-best-score', methods=['POST'])
+def editUserScore():
+    bestScore = request.get_json(force=True)['bestScore']
+    userId = request.get_json(force=True)['userId']
+
+    conn = get_db_connection('edit')
+    cur = conn.cursor()
+    cur.execute(sql_edit_user_score, (bestScore, userId))
+    cur.fetchone()
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return jsonify({'message': "score is updated!", 'userId': userId, 'bestScore': bestScore})
+
 
 # @app.route('/')
 # def index():

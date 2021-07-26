@@ -203,11 +203,14 @@ class Game extends React.Component {
         return true;
     };
 
+
     isWon(board) {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
-                if (board[i][j] === 2048) {
+                if (board[i][j] === 16) {
                     this.setState({ gameWon: true });
+                    (this.state.steps < this.state.bestScore) ?
+                        this.api.updateUserScore(this.state.steps, this.state.userId) : null
                 }
             }
         }

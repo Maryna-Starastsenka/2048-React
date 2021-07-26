@@ -72,4 +72,16 @@ class Api {
         });
         return await response.json();
     }
+
+    async updateUserScore(bestScore, userId) {
+        const response = await fetch(this.baseUrl + "user/edit-best-score", {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({ bestScore, userId }),
+        });
+        return await response.json();
+    }
 }
