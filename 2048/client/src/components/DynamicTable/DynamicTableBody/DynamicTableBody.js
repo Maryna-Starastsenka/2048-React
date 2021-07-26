@@ -3,7 +3,20 @@ class DynamicTableBody extends React.Component {
         return (
             <tr>
                 {tableHeaders.map((tableHeader) => {
-                    return <td>{`${element[tableHeader.columnDef]}`}</td>;
+                    return (
+                        <td>
+                            {tableHeader.columnDef === "isAdmin" ||
+                            tableHeader.columnDef === "isOnline"
+                                ? `${element[tableHeader.columnDef] === true ? "Yes" : "No"}`
+                                : tableHeader.columnDef === "bestScore"
+                                    ? `${
+                                        element[tableHeader.columnDef] === 0
+                                            ? "No score"
+                                            : `${element[tableHeader.columnDef]}`
+                                    }`
+                                    : `${element[tableHeader.columnDef]}`}
+                        </td>
+                    );
                 })}
             </tr>
         );

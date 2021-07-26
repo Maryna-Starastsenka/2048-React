@@ -93,12 +93,17 @@ class AdminDashboard extends React.Component {
                 ? this.getOppositeSortDirection(this.state.sortDirection)
                 : "asc";
         const sortedTable = this.state.tableData.sort((a, b) =>
-            this.compareValues(a[columnDef], b[columnDef], sortDirection)
+            this.compareValues(a[columnDef], b[columnDef], sortDirection, columnDef)
         );
+
+        const sortedTableWithoutZeros = sortedTable
+            .filter((elem) => elem.bestScore !== 0)
+            .concat(sortedTable.filter((elem) => elem.bestScore === 0));
+
         this.setState({
             sortDirection,
             sortColumn: columnDef,
-            tableData: sortedTable,
+            tableData: sortedTableWithoutZeros,
         });
     };
 
@@ -111,7 +116,9 @@ class AdminDashboard extends React.Component {
 
                     <div className="admin-dashboard_players-count">
                         <h4>Player count</h4>
-                        <div className="admin-dashboard-box">{this.state.userCount || "-"}</div>
+                        <div className="admin-dashboard-box">
+                            {this.state.userCount || "-"}
+                        </div>
 
                         <h4>Online players</h4>
                         <div className="admin-dashboard-box">
