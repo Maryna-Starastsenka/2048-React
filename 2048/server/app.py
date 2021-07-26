@@ -133,7 +133,7 @@ def getAdminDashBoardTable():
 
     conn = get_db_connection('selectall')
     cur = conn.cursor()
-    cur.execute(sql_count_users)
+    cur.execute(sql_select_all_users)
     res = cur.fetchall()
 
     cur.close()

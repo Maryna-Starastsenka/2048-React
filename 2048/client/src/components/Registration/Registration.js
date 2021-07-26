@@ -17,6 +17,7 @@ class Registration extends React.Component {
             isAdmin: userData ? userData.isAdmin : null,
             message: "",
             messageStatus: "",
+            enableCheckedBox: false,
         };
 
         this.api = new Api();
@@ -63,8 +64,9 @@ class Registration extends React.Component {
             const response = await this.api.createNewUser(
                 this.state.username,
                 this.state.password,
-                false
+                this.state.isAdmin,
             );
+
             this.state.username = "";
             this.state.password = "";
 
@@ -80,6 +82,12 @@ class Registration extends React.Component {
             }, 15000);
         }
     };
+
+    onClick = () => {
+        const checked = !this.state.enableCheckedBox;
+        this.setState({enableCheckedBox: checked});
+        this.setState({isAdmin: checked});
+    }
 
     render() {
         return (
@@ -147,6 +155,16 @@ class Registration extends React.Component {
                                 >
                                     Password is required!
                                 </div>
+                            </div>
+
+                            <div className="form-group form-check">
+                                <input className="form-check-input"
+                                    type="checkbox"
+                                    name="account-type"
+                                    value="admin"
+                                    checked={this.state.enableCheckedBox}
+                                    onChange={this.onClick}/>
+                                <label className="form-check-label">Administrator account</label>
                             </div>
 
                             <button
