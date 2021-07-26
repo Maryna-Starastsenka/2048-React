@@ -1,6 +1,6 @@
 class Game extends React.Component {
     api;
-    bestGeneralScoreId;
+    bestScoreId;
 
     constructor(props) {
         super(props);
@@ -23,21 +23,27 @@ class Game extends React.Component {
     }
 
     async componentDidMount() {
+        await this.updateScore();
+        this.bestScoreId = setInterval(() => {
+            this.updateScore();
+        }, 2000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.bestScoreId);
+    }
+
+    async updateScore() {
+        await this.updateUserBestScore();
+        await this.updateBestGeneralScore();
+    }
+
+    async updateUserBestScore() {
         const bestScore = await this.api.getUserBestScore(this.state.userId);
         this.setState({
             bestScore: bestScore.bestScore,
         });
-
-        this.bestGeneralScoreId = setInterval(
-            () => this.updateBestGeneralScore(),
-            2000
-        );
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.bestGeneralScoreId);
-    }
-
+}
     async updateBestGeneralScore() {
         const bestGeneralScore = await this.api.getGeneralBestScore();
         this.setState({
