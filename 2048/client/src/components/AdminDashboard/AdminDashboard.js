@@ -111,11 +111,11 @@ class AdminDashboard extends React.Component {
 
                     <div className="admin-dashboard_players-count">
                         <h4>Player count</h4>
-                        <div className="admin-dashboard-box">{this.state.userCount}</div>
+                        <div className="admin-dashboard-box">{this.state.userCount || "-"}</div>
 
                         <h4>Online players</h4>
                         <div className="admin-dashboard-box">
-                            {this.state.onlineUserCount}
+                            {this.state.onlineUserCount || "-"}
                         </div>
                     </div>
 
