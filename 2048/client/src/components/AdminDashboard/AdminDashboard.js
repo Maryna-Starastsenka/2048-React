@@ -38,6 +38,8 @@ class AdminDashboard extends React.Component {
             ],
 
             tableData: [],
+            sortDirection: "asc",
+            sortColumn: "userId",
 
             userId: userData ? userData.userId : null,
             isAdmin: userData ? userData.isAdmin : null,
@@ -48,14 +50,11 @@ class AdminDashboard extends React.Component {
 
     async componentDidMount() {
         await this.updateAdminDashBoardTableData();
-        this.tableDataId = setInterval(
-            () => {
-                this.updateAdminDashBoardTableData();
-                this.updateUserCount();
-                this.updateOnlineUserCount();
-            },
-            10000
-        );
+        this.tableDataId = setInterval(() => {
+            this.updateAdminDashBoardTableData();
+            this.updateUserCount();
+            this.updateOnlineUserCount();
+        }, 10000);
     }
 
     componentWillUnmount() {
@@ -74,7 +73,7 @@ class AdminDashboard extends React.Component {
         this.setState({
             userCount: userCount.userCount,
         });
-        console.log(userCount, "user count")
+        console.log(userCount, "user count");
     }
 
     async updateOnlineUserCount() {
@@ -82,17 +81,31 @@ class AdminDashboard extends React.Component {
         this.setState({
             onlineUserCount: onlineUserCount.onlineUserCount,
         });
-        console.log(onlineUserCount, "online user count")
+        console.log(onlineUserCount, "online user count");
     }
 
+    compareValues = (a, b, sortDirection) => {
+        return sortDirection === "asc" ? (a > b ? 1 : -1) : a < b ? 1 : -1;
+    };
+
+    getOppositeSortDirection = (sortDirection) => {
+        return sortDirection === "asc" ? "desc" : "asc";
+    };
+
     sortTableByColumn = (columnDef) => {
-        this.setState(
-            (prevState) => ({
-                ...prevState,
-                tableData: prevState.tableData.sort((a, b) => a[columnDef] - b[columnDef])
-            })
-        )
-    }
+        const sortDirection =
+            this.state.sortColumn === columnDef
+                ? this.getOppositeSortDirection(this.state.sortDirection)
+                : "asc";
+        const sortedTable = this.state.tableData.sort((a, b) =>
+            this.compareValues(a[columnDef], b[columnDef], sortDirection)
+        );
+        this.setState({
+            sortDirection,
+            sortColumn: columnDef,
+            tableData: sortedTable,
+        });
+    };
 
     render() {
         return (
@@ -103,21 +116,23 @@ class AdminDashboard extends React.Component {
 
                     <h4>Players</h4>
 
-                    <DynamicTable
-                        tableHeaders={this.state.tableHeaders}
-                        data={this.state.tableData}
-                        sortTableByColumn={this.sortTableByColumn}
-                    />
+                    {this.state.tableData.length > 0 ? (
+                        <DynamicTable
+                            tableHeaders={this.state.tableHeaders}
+                            data={this.state.tableData}
+                            sortTableByColumn={this.sortTableByColumn}
+                        />
+                    ) : (
+                        <div className="admin-dashboard_no-players-information">
+                            No Players Found
+                        </div>
+                    )}
 
                     <h4>Player count</h4>
-                        <div className="admin-dashboard-box">
-                            users
-                        </div>
+                    <div className="admin-dashboard-box">users</div>
 
                     <h4>Online players</h4>
-                        <div className="admin-dashboard-box">
-                            online users
-                    </div>
+                    <div className="admin-dashboard-box">online users</div>
                 </div>
             </div>
         );
