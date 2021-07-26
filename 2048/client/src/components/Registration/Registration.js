@@ -17,7 +17,7 @@ class Registration extends React.Component {
             isAdmin: userData ? userData.isAdmin : null,
             message: "",
             messageStatus: "",
-            enableCheckedBox: false,
+            isAdminCheckbox: false,
         };
 
         this.api = new Api();
@@ -64,13 +64,13 @@ class Registration extends React.Component {
             const response = await this.api.createNewUser(
                 this.state.username,
                 this.state.password,
-                this.state.isAdmin,
+                this.state.isAdminCheckbox
             );
 
-            this.state.username = "";
-            this.state.password = "";
-
             this.setState({
+                username: "",
+                password: "",
+                isAdminCheckbox: false,
                 message: response.message,
                 messageStatus: response.status,
             });
@@ -83,11 +83,11 @@ class Registration extends React.Component {
         }
     };
 
-    onClick = () => {
-        const checked = !this.state.enableCheckedBox;
-        this.setState({enableCheckedBox: checked});
-        this.setState({isAdmin: checked});
-    }
+    onCheckboxChange = () => {
+        this.setState((prevState) => ({
+            isAdminCheckbox: !prevState.isAdminCheckbox,
+        }));
+    };
 
     render() {
         return (
@@ -158,13 +158,17 @@ class Registration extends React.Component {
                             </div>
 
                             <div className="form-group form-check">
-                                <input className="form-check-input"
+                                <input
+                                    className="form-check-input"
                                     type="checkbox"
                                     name="account-type"
                                     value="admin"
-                                    checked={this.state.enableCheckedBox}
-                                    onChange={this.onClick}/>
-                                <label className="form-check-label">Administrator account</label>
+                                    checked={this.state.isAdminCheckbox}
+                                    onChange={this.onCheckboxChange}
+                                />
+                                <label className="form-check-label">
+                                    Administrator account
+                                </label>
                             </div>
 
                             <button
@@ -176,17 +180,7 @@ class Registration extends React.Component {
                             </button>
                         </div>
                     ) : (
-                        <div className="sign-up_form">
-                            <h3>You're already logged in</h3>
-
-                            <button
-                                type="button"
-                                className="btn btn-dark btn-lg btn-block logout-btn"
-                                onClick={() => this.logOut()}
-                            >
-                                Log out
-                            </button>
-                        </div>
+                        <LogoutForm logOut={this.logOut} />
                     )}
                 </div>
             </div>

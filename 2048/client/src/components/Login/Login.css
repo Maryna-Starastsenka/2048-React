@@ -14,7 +14,7 @@
 .login_form_confirmation-message {
     margin: 1.5rem 0;
     justify-content: center;
-    color: red;
+    color: green;
 }
 
 .form_error-message {

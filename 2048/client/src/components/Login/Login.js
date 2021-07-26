@@ -22,7 +22,7 @@ class Login extends React.Component {
     }
 
     handleChange = (e) => {
-        const {id, value} = e.target;
+        const { id, value } = e.target;
         this.setState((prevState) => ({
             ...prevState,
             [id]: value,
@@ -66,45 +66,43 @@ class Login extends React.Component {
             this.state.username = "";
             this.state.password = "";
 
-            this.setState({
-                message: response.message,
-                isAdmin: response.isAdmin,
-                userId: response.userId,
-            }, () => {
-                if(this.state.userId) {
-                    localStorage.setItem(
-                        "user",
-                        btoa(
-                            JSON.stringify({
-                                userId: this.state.userId,
-                                isAdmin: this.state.isAdmin,
-                            })
-                        )
-                    );
+            this.setState(
+                {
+                    message: response.message,
+                    isAdmin: response.isAdmin,
+                    userId: response.userId,
+                },
+                () => {
+                    if (this.state.userId) {
+                        localStorage.setItem(
+                            "user",
+                            btoa(
+                                JSON.stringify({
+                                    userId: this.state.userId,
+                                    isAdmin: this.state.isAdmin,
+                                })
+                            )
+                        );
+                    }
                 }
-            });
+            );
+
+            setTimeout(() => {
+                this.setState({
+                    message: null,
+                });
+            }, 3000);
         }
     };
 
     render() {
         return (
             <div>
-                <Navigation userId={this.state.userId} isAdmin={this.state.isAdmin}/>
+                <Navigation userId={this.state.userId} isAdmin={this.state.isAdmin} />
                 <div className="login_container">
                     {!this.state.userId ? (
                         <div className="login_form">
                             <h3>Sign in with your 2048 account</h3>
-
-                            <div
-                                className="login_form_confirmation-message"
-                                style={{
-                                    display: this.state.message ? "flex" : "none",
-                                    color:
-                                        this.state.messageStatus === "Failed" ? "red" : "green",
-                                }}
-                            >
-                                {this.state.message}
-                            </div>
 
                             <div className="form-group">
                                 <label>Username</label>
@@ -162,18 +160,17 @@ class Login extends React.Component {
                                 Log in
                             </button>
                         </div>
-                    ) : (
-                        <div className="login_form">
-                            <h3>You're already logged in</h3>
-
-                            <button
-                                type="button"
-                                className="btn btn-dark btn-lg btn-block logout-btn"
-                                onClick={() => this.logOut()}
-                            >
-                                Log out
-                            </button>
+                    ) : this.state.message ? (
+                        <div
+                            className="login_form_confirmation-message"
+                            style={{
+                                display: this.state.message ? "flex" : "none",
+                            }}
+                        >
+                            {this.state.message}
                         </div>
+                    ) : (
+                        <LogoutForm logOut={this.logOut} />
                     )}
                 </div>
             </div>
@@ -181,4 +178,4 @@ class Login extends React.Component {
     }
 }
 
-ReactDOM.render(<Login/>, document.getElementById("root"));
+ReactDOM.render(<Login />, document.getElementById("root"));
