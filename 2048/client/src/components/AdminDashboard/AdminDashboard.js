@@ -121,6 +121,8 @@ class AdminDashboard extends React.Component {
                             tableHeaders={this.state.tableHeaders}
                             data={this.state.tableData}
                             sortTableByColumn={this.sortTableByColumn}
+                            sortDirection={this.state.sortDirection}
+                            sortColumn={this.state.sortColumn}
                         />
                     ) : (
                         <div className="admin-dashboard_no-players-information">
