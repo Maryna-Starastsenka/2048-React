@@ -47,11 +47,12 @@ class AdminDashboard extends React.Component {
     }
 
     async componentDidMount() {
-        await this.updateAdminDashBoardTableData()
+        await this.updateAdminDashBoardTableData();
         this.tableDataId = setInterval(
             () => {
                 this.updateAdminDashBoardTableData();
-
+                this.updateUserCount();
+                this.updateOnlineUserCount();
             },
             10000
         );
@@ -66,6 +67,22 @@ class AdminDashboard extends React.Component {
         this.setState({
             tableData: tableData,
         });
+    }
+
+    async updateUserCount() {
+        const userCount = await this.api.getUserCount();
+        this.setState({
+            userCount: userCount.userCount,
+        });
+        console.log(userCount, "user count")
+    }
+
+    async updateOnlineUserCount() {
+        const onlineUserCount = await this.api.getOnlineUserCount();
+        this.setState({
+            onlineUserCount: onlineUserCount.onlineUserCount,
+        });
+        console.log(onlineUserCount, "online user count")
     }
 
     sortTableByColumn = (columnDef) => {
@@ -93,8 +110,14 @@ class AdminDashboard extends React.Component {
                     />
 
                     <h4>Player count</h4>
+                        <div className="admin-dashboard-box">
+                            users
+                        </div>
 
                     <h4>Online players</h4>
+                        <div className="admin-dashboard-box">
+                            online users
+                    </div>
                 </div>
             </div>
         );

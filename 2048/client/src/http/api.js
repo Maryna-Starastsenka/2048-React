@@ -61,4 +61,26 @@ class Api {
         });
         return await response.json();
     }
+
+    async getUserCount() {
+        const response = await fetch(this.baseUrl + `admin-dashboard/player-count`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        return await response.json();
+    }
+
+    async getOnlineUserCount() {
+        const response = await fetch(this.baseUrl + `admin-dashboard/online-players`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        return await response.json();
+    }
 }

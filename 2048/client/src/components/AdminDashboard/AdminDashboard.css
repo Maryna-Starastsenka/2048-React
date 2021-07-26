@@ -11,3 +11,18 @@ h3, h4 {
 .table th, td {
     font-weight: 200;
 }
+
+.admin-dashboard-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #baaea0;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 3px;
+    margin-left: 10px;
+}

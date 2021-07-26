@@ -24,7 +24,7 @@ sql_select_one_user = "SELECT * FROM `users` WHERE `userId` = %s"
 sql_verify_user = "SELECT * FROM `users` WHERE (`username` = %s AND `password` = %s)"
 sql_get_user_by_username = "SELECT * FROM `users` WHERE `username` = %s"
 sql_count_users = "SELECT COUNT(`userId`) AS `numberUsers` FROM `users`"
-sql_count_online_users = "SELECT COUNT(`userId`) AS `numberOnlinesers` FROM `users` WHERE `isOnline` = %s"
+sql_count_online_users = "SELECT COUNT(`userId`) AS `numberOnlineUsers` FROM `users` WHERE `isOnline` = True"
 sql_find_best_score = "SELECT MIN(NULLIF(`bestScore`, 0)) AS `bestGeneralScore` FROM `users`"
 sql_find_user_best_score = "SELECT `bestScore` FROM `users` WHERE `userId` = %s"
 sql_update_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
@@ -133,7 +133,7 @@ def getAdminDashBoardTable():
 
     conn = get_db_connection('selectall')
     cur = conn.cursor()
-    cur.execute(sql_select_all_users)
+    cur.execute(sql_count_users)
     res = cur.fetchall()
 
     cur.close()
@@ -143,6 +143,34 @@ def getAdminDashBoardTable():
     for index, value in enumerate(res):
         res[index]['isAdmin'] = bool(res[index].get('isAdmin'))
         res[index]['isOnline'] = bool(res[index].get('isOnline'))
+
+    return jsonify(res)
+
+@app.route('/admin-dashboard/player-count', methods=['GET'])
+def getUserCount():
+
+    conn = get_db_connection('selectall')
+    cur = conn.cursor()
+    cur.execute(sql_count_users)
+    res = cur.fetchone()
+
+    cur.close()
+    conn.commit()
+    conn.close()
+
+    return jsonify(res)
+
+@app.route('/admin-dashboard/online-players', methods=['GET'])
+def getOnlineUserCount():
+
+    conn = get_db_connection('selectall')
+    cur = conn.cursor()
+    cur.execute(sql_count_online_users)
+    res = cur.fetchone()
+
+    cur.close()
+    conn.commit()
+    conn.close()
 
     return jsonify(res)
 

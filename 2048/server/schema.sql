@@ -48,3 +48,6 @@ SELECT MIN(bestScore) AS bestScoreFromDb FROM users;
 
 -- update user score
 UPDATE users SET bestScore = 15 WHERE (userId = 4);
+
+-- update isOnline
+UPDATE users SET isOnline = True WHERE (userId = 4);

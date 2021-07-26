@@ -1,2 +1,4 @@
 .idea/
 2048/server/__pycache_/
+2048/server/__pycache__/
+env/
