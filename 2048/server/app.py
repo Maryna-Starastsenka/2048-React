@@ -7,7 +7,7 @@ import pymysql.cursors
 def get_db_connection(type):
     connection = pymysql.connect(host='localhost',
                                  user='root',
-                                 password='',
+                                 password='marynaSQL',
                                  db='game2048',
                                  charset='utf8mb4',
                                  cursorclass=pymysql.cursors.DictCursor)
@@ -23,8 +23,8 @@ sql_select_all_users = "SELECT * FROM `users`"
 sql_select_one_user = "SELECT * FROM `users` WHERE `userId` = %s"
 sql_verify_user = "SELECT * FROM `users` WHERE (`username` = %s AND `password` = %s)"
 sql_get_user_by_username = "SELECT * FROM `users` WHERE `username` = %s"
-sql_count_users = "SELECT COUNT(`userId`) AS `numberUsers` FROM `users`"
-sql_count_online_users = "SELECT COUNT(`userId`) AS `numberOnlineUsers` FROM `users` WHERE `isOnline` = True"
+sql_count_users = "SELECT COUNT(`userId`) AS `userCount` FROM `users`"
+sql_count_online_users = "SELECT COUNT(`userId`) AS `onlineUserCount` FROM `users` WHERE `isOnline` = True"
 sql_find_best_score = "SELECT MIN(NULLIF(`bestScore`, 0)) AS `bestGeneralScore` FROM `users`"
 sql_find_user_best_score = "SELECT `bestScore` FROM `users` WHERE `userId` = %s"
 sql_update_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
@@ -146,33 +146,23 @@ def getAdminDashBoardTable():
 
     return jsonify(res)
 
-@app.route('/admin-dashboard/player-count', methods=['GET'])
+@app.route('/admin-dashboard/user-count', methods=['GET'])
 def getUserCount():
 
     conn = get_db_connection('selectall')
     cur = conn.cursor()
     cur.execute(sql_count_users)
-    res = cur.fetchone()
-
-    cur.close()
-    conn.commit()
-    conn.close()
-
-    return jsonify(res)
-
-@app.route('/admin-dashboard/online-players', methods=['GET'])
-def getOnlineUserCount():
-
-    conn = get_db_connection('selectall')
-    cur = conn.cursor()
+    userCount = cur.fetchone()
     cur.execute(sql_count_online_users)
-    res = cur.fetchone()
+    onlineUserCount = cur.fetchone()
 
     cur.close()
     conn.commit()
     conn.close()
 
-    return jsonify(res)
+    return jsonify(
+        dict(userCount, **onlineUserCount)
+    )
 
 # @app.route('/')
 # def index():

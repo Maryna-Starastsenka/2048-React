@@ -1,5 +1,6 @@
 class AdminDashboard extends React.Component {
     api;
+    dashboardDataId;
 
     constructor(props) {
         super(props);
@@ -49,16 +50,19 @@ class AdminDashboard extends React.Component {
     }
 
     async componentDidMount() {
-        await this.updateAdminDashBoardTableData();
-        this.tableDataId = setInterval(() => {
-            this.updateAdminDashBoardTableData();
-            this.updateUserCount();
-            this.updateOnlineUserCount();
+        await this.updateAdminDashBoardData();
+        this.dashboardDataId = setInterval(() => {
+            this.updateAdminDashBoardData();
         }, 10000);
     }
 
     componentWillUnmount() {
-        clearInterval(this.tableDataId);
+        clearInterval(this.dashboardDataId);
+    }
+
+    async updateAdminDashBoardData() {
+        await this.updateAdminDashBoardTableData();
+        await this.updateUserCount();
     }
 
     async updateAdminDashBoardTableData() {
@@ -71,17 +75,8 @@ class AdminDashboard extends React.Component {
     async updateUserCount() {
         const userCount = await this.api.getUserCount();
         this.setState({
-            userCount: userCount.userCount,
+            ...userCount,
         });
-        console.log(userCount, "user count");
-    }
-
-    async updateOnlineUserCount() {
-        const onlineUserCount = await this.api.getOnlineUserCount();
-        this.setState({
-            onlineUserCount: onlineUserCount.onlineUserCount,
-        });
-        console.log(onlineUserCount, "online user count");
     }
 
     compareValues = (a, b, sortDirection) => {
@@ -114,6 +109,16 @@ class AdminDashboard extends React.Component {
                 <div className="admin-dashboard_container">
                     <h3>Administrator Dashboard</h3>
 
+                    <div className="admin-dashboard_players-count">
+                        <h4>Player count</h4>
+                        <div className="admin-dashboard-box">{this.state.userCount}</div>
+
+                        <h4>Online players</h4>
+                        <div className="admin-dashboard-box">
+                            {this.state.onlineUserCount}
+                        </div>
+                    </div>
+
                     <h4>Players</h4>
 
                     {this.state.tableData.length > 0 ? (
@@ -129,12 +134,6 @@ class AdminDashboard extends React.Component {
                             No Players Found
                         </div>
                     )}
-
-                    <h4>Player count</h4>
-                    <div className="admin-dashboard-box">users</div>
-
-                    <h4>Online players</h4>
-                    <div className="admin-dashboard-box">online users</div>
                 </div>
             </div>
         );

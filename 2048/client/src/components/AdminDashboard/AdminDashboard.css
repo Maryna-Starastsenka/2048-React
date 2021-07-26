@@ -38,3 +38,9 @@ h3, h4 {
     color: red;
     margin: 3rem auto;
 }
+
+.admin-dashboard_players-count {
+    display: flex;
+    height: 2rem;
+    align-items: center;
+}

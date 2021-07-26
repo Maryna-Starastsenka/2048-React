@@ -63,18 +63,7 @@ class Api {
     }
 
     async getUserCount() {
-        const response = await fetch(this.baseUrl + `admin-dashboard/player-count`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "text/plain",
-                "Access-Control-Allow-Origin": "*",
-            },
-        });
-        return await response.json();
-    }
-
-    async getOnlineUserCount() {
-        const response = await fetch(this.baseUrl + `admin-dashboard/online-players`, {
+        const response = await fetch(this.baseUrl + `admin-dashboard/user-count`, {
             method: "GET",
             headers: {
                 "Content-Type": "text/plain",
