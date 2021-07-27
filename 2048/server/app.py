@@ -4,10 +4,10 @@ from werkzeug.exceptions import abort
 import pymysql.cursors
 
 def get_db_connection(type):
-    connection = pymysql.connect(host='www-ens.iro.umontreal.ca',
-                                 user='starastm',
-                                 password='stmp124S',
-                                 db='starastm_game2048',
+    connection = pymysql.connect(host='localhost',
+                                 user='root',
+                                 password='marynaSQL',
+                                 db='game2048',
                                  charset='utf8mb4',
                                  cursorclass=pymysql.cursors.DictCursor)
     conn = connection.cursor()

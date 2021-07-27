@@ -3,4 +3,4 @@ const gameParams = {
     colCount: 4,
 }
 
-const baseUrl = 'https://www-ens.iro.umontreal.ca/~starastm/cgi-bin/init.cgi/'
+const baseUrl = 'http://127.0.0.1:5000/'
