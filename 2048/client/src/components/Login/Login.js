@@ -153,6 +153,17 @@ class Login extends React.Component {
                                 </div>
                             </div>
 
+                            {this.state.message ? (
+                                <div
+                                    className="login_form_invalid-data-message"
+                                    style={{
+                                        display: this.state.message ? "flex" : "none",
+                                    }}
+                                >
+                                    {this.state.message}
+                                </div>
+                            ) : null}
+
                             <button
                                 type="button"
                                 className="btn btn-dark btn-lg btn-block"

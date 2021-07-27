@@ -30,3 +30,9 @@
 .logout-btn {
     margin-top: 1rem;
 }
+
+.login_form_invalid-data-message {
+    color: red;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
