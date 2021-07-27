@@ -83,4 +83,15 @@ class Api {
             body: JSON.stringify({ bestScore, userId }),
         });
     }
+
+    logOutUser(userId) {
+        fetch(this.baseUrl + "users/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({ userId }),
+        });
+    }
 }

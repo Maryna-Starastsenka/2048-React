@@ -27,6 +27,7 @@ sql_count_online_users = "SELECT COUNT(`userId`) AS `onlineUserCount` FROM `user
 sql_find_best_score = "SELECT MIN(NULLIF(`bestScore`, 0)) AS `bestGeneralScore` FROM `users`"
 sql_find_user_best_score = "SELECT `bestScore` FROM `users` WHERE `userId` = %s"
 sql_edit_user_score = "UPDATE `users` SET `bestScore` = %s WHERE `userId` = %s"
+sql_edit_user_online_state = "UPDATE `users` SET `isOnline` = %s WHERE `userId` = %s"
 sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `bestScore`, `isOnline`) VALUES (%s, %s, %s, %s, %s)"
 
 app = Flask(__name__)
@@ -77,6 +78,8 @@ def login():
         else:
             isAdmin = False
 
+        cur.execute(sql_edit_user_online_state, (userId, True))
+
         return jsonify({'message': message, 'userId': res.get('userId'
                        ), 'isAdmin': isAdmin})
     else:
@@ -86,6 +89,17 @@ def login():
     cur.close()
     conn.commit()
     conn.close()
+
+@app.route('/users/logout', methods=['POST'])
+def login():
+    userId = request.get_json(force=True)['userId']
+
+    conn = get_db_connection('selectall')
+    cur = conn.cursor()
+
+    cur.execute(sql_edit_user_online_state, (userId, False))
+
+    return jsonify({'message': 'User has logged out'})
 
 @app.route('/score', methods=['GET'])
 def getUserBestScore():

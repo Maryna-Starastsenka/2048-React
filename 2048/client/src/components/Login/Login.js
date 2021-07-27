@@ -35,6 +35,7 @@ class Login extends React.Component {
     }
 
     logOut = () => {
+        this.api.logOutUser(this.state.userId);
         localStorage.removeItem("user");
         this.setState({
             userId: null,
