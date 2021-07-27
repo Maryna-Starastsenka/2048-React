@@ -91,7 +91,7 @@ def login():
     conn.close()
 
 @app.route('/users/logout', methods=['POST'])
-def login():
+def logout():
     userId = request.get_json(force=True)['userId']
 
     conn = get_db_connection('selectall')
