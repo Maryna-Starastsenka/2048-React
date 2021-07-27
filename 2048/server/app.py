@@ -78,26 +78,35 @@ def login():
         else:
             isAdmin = False
 
-        cur.execute(sql_edit_user_online_state, (userId, True))
+        cur.execute(sql_edit_user_online_state, (True, res.get('userId')))
+
+        cur.close()
+        conn.commit()
+        conn.close()
 
         return jsonify({'message': message, 'userId': res.get('userId'
                        ), 'isAdmin': isAdmin})
     else:
         message = 'Invalid username or password'
-        return jsonify({'message': message})
 
-    cur.close()
-    conn.commit()
-    conn.close()
+        cur.close()
+        conn.commit()
+        conn.close()
+
+        return jsonify({'message': message})
 
 @app.route('/users/logout', methods=['POST'])
 def logout():
     userId = request.get_json(force=True)['userId']
 
-    conn = get_db_connection('selectall')
+    conn = get_db_connection('edit')
     cur = conn.cursor()
 
-    cur.execute(sql_edit_user_online_state, (userId, False))
+    cur.execute(sql_edit_user_online_state, (False, userId))
+
+    cur.close()
+    conn.commit()
+    conn.close()
 
     return jsonify({'message': 'User has logged out'})
 
