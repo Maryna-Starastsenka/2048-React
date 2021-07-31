@@ -54,11 +54,7 @@
                         <li><span class="green">&lt;LogoutForm/&gt;</span> : composant qui est responsable de la déconnexion du jeu.</li>
                         <li><span class="green">&lt;Navigation/&gt;</span> : composant qui contient la navigation entre les pages XHTML.</li>
                         <li><span class="green">&lt;Registration/&gt;</span> composant qui est responsable de la page d’enregistrement dans l’application.</li>
-                    </ul>
-
-                    <div class="image">
-                        <p>Figure 2 -  Diagramme des flux de données entre les composants du jeu 2048</p>
-                    </div>    
+                    </ul>   
                 </div>
             </div>
             <hr class="solid"/>
@@ -82,6 +78,10 @@
                         <li><span class="green">isOnline </span> : Vrai si l’utilisateur est en ligne, Faux sinon</li>
                         <li><span class="green">signUpDate</span> : date d’enregistrement dans l’application</li>
                     </ul>
+                    <div class="image">
+                        <img src="./images/users-table.png" alt="Table « users » de la base de données"/>
+                        <p>Figure 1 -  Table « users » de la base de données « starastm_game2048 »</p>
+                    </div> 
                 </div>
             </div>
             <hr class="solid"/>
@@ -94,6 +94,10 @@
                         C’est une solution alternative à JWT Token qui ne dépend pas de bibliothèques supplémentaires. 
                         La valeur obtenue est placée dans le « localStorage » du navigateur Web avec la clé « user ».
                     </p>
+                    <div class="image">
+                        <img src="./images/local-storage.png" alt="Nom d'utilisateur et son nom de passe encodé avec la fonction « btoa »"/>
+                        <p>Figure 2 -  Utilisation du « localStorage » pour placer le nom d’utilisateur avec son mot de masse encodés par la fonction « btoa »</p>
+                    </div> 
                     <p>
                         L’utilisation du « localStorage » permet également de créer une restriction pour se connecter ou créer un nouveau compte si un utilisateur est présentement connecté. 
                         Il faut d’abord se déconnecter et, ensuite, se connecter avec un autre nom d’utilisateur.

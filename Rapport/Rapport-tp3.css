@@ -35,16 +35,9 @@
     color: #5c6369;
 }
 
-#diagram {
-    width: 40%;
-}
-
-#img-components {
-    width: 30%;   
-}
-
 .image img {
     display: block;
+    width: 60%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 0.5rem;
@@ -56,18 +49,6 @@
     font-size:0.9rem;
 }
 
-#blue {
-    color: #0c469c;
-}
-
-#red {
-    color: red;
-}
-
 .green {
     color: green;
-}
-
-#purple {
-    color: purple;
 }

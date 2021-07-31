@@ -5,10 +5,10 @@ Maryna Starastsenka
 
 Rapport :
 
-http://www-ens.iro.umontreal.ca/~starastm/2048-game/Rapport/Rapport-tp2.xhtml
+http://www-ens.iro.umontreal.ca/~starastm/ift3225/tp3/Rapport/Rapport-tp3.xhtml
 
 
 
 Code déployé sur le serveur :
 
-http://www-ens.iro.umontreal.ca/~starastm/2048-game/2048/index.xhtml
+http://www-ens.iro.umontreal.ca/~starastm/ift3225/tp3/client/index.xhtml
