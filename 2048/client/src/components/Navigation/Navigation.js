@@ -13,7 +13,7 @@ class Navigation extends React.Component {
                     Play
                 </div>
                 <div className='navigation_element' onClick={() => this.navigateTo("~starastm/ift3225/tp3/client/login.xhtml")}>
-                    Log in
+                    Log in / Log out
                 </div>
                 <div className='navigation_element' onClick={() => this.navigateTo("~starastm/ift3225/tp3/client/registration.xhtml")}>
                     Sign up

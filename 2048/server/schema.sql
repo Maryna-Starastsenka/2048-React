@@ -21,11 +21,11 @@ CREATE TABLE users (
 
 INSERT INTO users (username, password, isAdmin, bestScore, isOnline) VALUES 
 	("maryna", "maryna2048", True, 25, False),
-	("julie", "111222", False, 35, False),
+	("julie", "1122", False, 35, False),
 	("marc", "game2048", False, 32, False);
 
 INSERT INTO users (username, password, isAdmin, bestScore, isOnline) VALUES 
-	("michel", "12345", False, 30, True);
+	("michel", "12345", True, 30, False);
 
 
 -- all users with info 

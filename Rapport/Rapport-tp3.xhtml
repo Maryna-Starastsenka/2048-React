@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Rapport TP3</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="Rapport-tp3.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header p-3">
+                <h1>Étudiante : Maryna Starastsenka</h1>
+                <h1>Matricule : 20166402</h1>
+                <a href="http://www-ens.iro.umontreal.ca/~starastm/ift3225/tp3/client/index.xhtml" class="text-warning">Lien vers le jeu 2048 déployé sur le serveur du DIRO</a>
+            </div>
+            
+            <div class="title">
+                <h1>IFT3225 - Technologie de l'Internet</h1>
+                <h1>Rapport du TP3</h1>
+            </div>
+            
+            <div class="block">
+                <h2>Travail préparatoire</h2>
+                <div class="block-text">
+                    <p>
+                        Le projet du TP3 demande des connaissances du framework Flask, du système de base de données MySQL, et d’AJAX. 
+                        Il était important de comprendre les principes de fonctionnement des API afin d’assurer la communication entre le Back-End et le Front-End de l’application.  
+                    </p>
+                    <p>
+                        Le déploiement de l’application sur le serveur du DIRO, la création de l’environnement et l’utilisation du script CGI étaient également des points importants à ce stade. 
+                        Comme lors du travail sur le TP2, j’ai utilisé l’outil WebStorm qui m’est apparu plus robuste et facile à utiliser lorsqu’il s’agit du développement web.
+                    </p>
+                </div>
+            </div>
+            <hr class="solid"/>
+            
+            <div class="block">
+                <h2>Ajout de « Components » dans l’application</h2>
+                <div class="block-text">
+                    <p>
+                        Comme nous avons eu la liberté de choix des outils au niveau du Front-End, j’ai préféré garder la structure du projet existant en ajoutant les composants additionnels en React.
+                        Voici la liste des nouveaux composants choisis :
+                    </p>
+                    <ul>
+                        <li><span class="green">&lt;AdminDashboard/&gt;</span> : composant qui contient le tableau de bord avec tous les utilisateurs, le nombre de joueurs inscrits et le nombre de joueurs en ligne.</li>
+                        <li><span class="green">&lt;DynamicTable/&gt;</span>  : composant qui permet d’afficher le tableau de bord pour les administrateurs du jeu.</li>
+                        <li><span class="green">&lt;DynamicTableHeaders/&gt;</span> : composant qui contient l’en-tête du tableau dynamique.</li>
+                        <li><span class="green">&lt;DynamicTableBody/&gt;</span> : composant qui contient le corps du tableau dynamique rempli des données sur les joueurs.</li>
+                        <li><span class="green">&lt;Home/&gt;</span> : composant qui contient le message de la page d’accueil. </li>
+                        <li><span class="green">&lt;Login/&gt;</span> : composant qui est responsable de la page de connexion dans l’application et contient le nom d’utilisateur avec son mot de passe.</li>
+                        <li><span class="green">&lt;LogoutForm/&gt;</span> : composant qui est responsable de la déconnexion du jeu.</li>
+                        <li><span class="green">&lt;Navigation/&gt;</span> : composant qui contient la navigation entre les pages XHTML.</li>
+                        <li><span class="green">&lt;Registration/&gt;</span> composant qui est responsable de la page d’enregistrement dans l’application.</li>
+                    </ul>
+
+                    <div class="image">
+                        <p>Figure 2 -  Diagramme des flux de données entre les composants du jeu 2048</p>
+                    </div>    
+                </div>
+            </div>
+            <hr class="solid"/>
+            
+            <div class="block">
+                <h2>Base de données</h2>
+                <div class="block-text">
+                    <p>
+                        Le choix de la base de données pour ce projet fut celui de MySQL sur le serveur <a href="www-ens.iro.umontreal.ca">www-ens.iro.umontreal.ca</a>.
+                    </p>
+                    <p>
+                        Le schéma de la base de données est fourni dans le dossier soumis sur StudiuM : IFT3225-TP3/2048/server/schema.sql. 
+                        La table « users » contient des informations sur les utilisateurs inscrits :      
+                    </p>
+                    <ul>
+                        <li><span class="green">userId</span> : identifiant unique d’un utilisateur, clé primaire de la table « users »</li>
+                        <li><span class="green">username</span> : nom d’utilisateur</li>
+                        <li><span class="green">password</span> : mot de passe utilisateur</li>
+                        <li><span class="green">isAdmin</span> : Vrai si l’utilisateur a les droits administrateur, Faux sinon</li>
+                        <li><span class="green">bestScore</span> : meilleur score du joueur</li>
+                        <li><span class="green">isOnline </span> : Vrai si l’utilisateur est en ligne, Faux sinon</li>
+                        <li><span class="green">signUpDate</span> : date d’enregistrement dans l’application</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="solid"/>
+            
+            <div class="block">
+                <h2>Éléments pris en considération lors de la création du jeu</h2>
+                <div class="block-text">
+                    <p>
+                        Le composant « Login » contient la fonction « btoa » utilisée pour encoder le nom d’utilisateur avec son mot de masse lors de la connexion. 
+                        C’est une solution alternative à JWT Token qui ne dépend pas de bibliothèques supplémentaires. 
+                        La valeur obtenue est placée dans le « localStorage » du navigateur Web avec la clé « user ».
+                    </p>
+                    <p>
+                        L’utilisation du « localStorage » permet également de créer une restriction pour se connecter ou créer un nouveau compte si un utilisateur est présentement connecté. 
+                        Il faut d’abord se déconnecter et, ensuite, se connecter avec un autre nom d’utilisateur.
+                    </p>
+                    <p>
+                        La validation du « login » et du « signup » est prise en compte lors du développement du jeu. 
+                        Les pages de connexion et d’enregistrement affichent les erreurs dans les cas suivants :
+                    </p>
+                    <ul>
+                        <li>Un utilisateur a entré un nom d’utilisateur ou un mot de passe incorrect.</li>
+                        <li>Un utilisateur essaye de créer un compte avec un nom d’utilisateur qui existe déjà dans la base de données.</li>
+                        <li>Un utilisateur n’a pas rempli tous les champs lors de la connexion ou de l’enregistrement.</li>
+                    </ul>
+                    <p>
+                        Comme nous n’avons pas le droit d’utiliser les bibliothèques dans notre projet, j’ai créé une alternative de React Router dans le composant « Navigation ». 
+                        Quand on appuie sur un bouton du menu, cela nous amène à la nouvelle page XHTML.
+                    </p>
+                </div>
+            </div>
+            <hr class="solid"/>
+            
+            <div class="block">
+                <h2>Mise à jour des données en temps réel</h2>
+                <div class="block-text">
+                    <p>
+                        Dans la page de jeu on affiche les informations suivantes : 
+                    </p>
+                    <ul>
+                        <li><span class="green">Steps</span> : score du jeu courant</li>
+                        <li><span class="green">My best score</span> : meilleur score du joueur connecté</li>
+                        <li><span class="green">Best score </span> : meilleur score parmi tous les joueurs</li>
+                    </ul>
+                    <p>
+                        La mise à jour du score se passe toutes les deux secondes. 
+                    </p>
+                    <p>
+                        L’administrateur a accès à « Admin Dashboard » qui affiche des informations sur les utilisateurs. 
+                        Comme le volume de données est plus grand et qu’on suppose qu’avec le temps le nombre d’utilisateurs sera important, nous faisons la mise à jour des données toutes les dix secondes.
+                    </p>
+                </div>
+            </div>
+            <hr class="solid"/>
+            
+            <div class="block">
+                <h2>Trie des données dans le tableau de bord</h2>
+                <div class="block-text">
+                    <p>
+                        Une option de trie des données sur les utilisateurs dans le tableau de bord est faite par tous les critères faisant partie de l’en-tête du tableau.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

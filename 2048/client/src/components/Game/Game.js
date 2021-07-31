@@ -223,7 +223,7 @@ class Game extends React.Component {
     isWon(board) {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
-                if (board[i][j] === 16) {
+                if (board[i][j] === 2048) {
                     return true;
                 }
             }

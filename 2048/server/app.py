@@ -1,5 +1,6 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
+from flask_cors import CORS
 from werkzeug.exceptions import abort
 import pymysql.cursors
 
@@ -32,6 +33,7 @@ sql_insert_user = "INSERT INTO `users` (`username`, `password`, `isAdmin`, `best
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+CORS(app)
 
 
 @app.route('/users/register', methods=['POST'])
