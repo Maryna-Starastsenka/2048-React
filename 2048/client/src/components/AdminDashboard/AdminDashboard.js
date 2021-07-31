@@ -79,7 +79,11 @@ class AdminDashboard extends React.Component {
         });
     }
 
-    compareValues = (a, b, sortDirection) => {
+    compareValues = (a, b, sortDirection, columnDef) => {
+        if (columnDef === 'signUpDate') {
+            a = new Date(a);
+            b = new Date(b);
+        }
         return sortDirection === "asc" ? (a > b ? 1 : -1) : a < b ? 1 : -1;
     };
 
@@ -92,9 +96,12 @@ class AdminDashboard extends React.Component {
             this.compareValues(a[columnDef], b[columnDef], sortDirection, columnDef)
         );
 
-        return sortedData
-            .filter((elem) => elem.bestScore !== 0)
-            .concat(sortedData.filter((elem) => elem.bestScore === 0));
+        if (columnDef === 'bestScore') {
+            return sortedData
+                .filter((elem) => elem.bestScore !== 0)
+                .concat(sortedData.filter((elem) => elem.bestScore === 0));
+        }
+        return sortedData;
     }
 
     sortTableByColumn = (columnDef) => {
@@ -103,7 +110,7 @@ class AdminDashboard extends React.Component {
                 ? this.getOppositeSortDirection(this.state.sortDirection)
                 : "asc";
 
-        const sortedTable = this.sortData(this.state.tableData, this.state.sortColumn, sortDirection);
+        const sortedTable = this.sortData(this.state.tableData, columnDef, sortDirection);
 
         this.setState({
             sortDirection,
