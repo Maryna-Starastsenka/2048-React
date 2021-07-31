@@ -169,7 +169,7 @@ class Login extends React.Component {
                                 className="btn btn-dark btn-lg btn-block"
                                 onClick={() => this.login()}
                             >
-                                Log in
+                                Log in / Log out
                             </button>
                         </div>
                     ) : this.state.message ? (
