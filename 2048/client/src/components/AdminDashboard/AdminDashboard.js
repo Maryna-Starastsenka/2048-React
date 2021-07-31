@@ -68,7 +68,7 @@ class AdminDashboard extends React.Component {
     async updateAdminDashBoardTableData() {
         const tableData = await this.api.getAdminDashBoardTable();
         this.setState({
-            tableData: tableData,
+            tableData: this.sortData(tableData, this.state.sortColumn, this.state.sortDirection),
         });
     }
 
@@ -87,23 +87,28 @@ class AdminDashboard extends React.Component {
         return sortDirection === "asc" ? "desc" : "asc";
     };
 
+    sortData = (data, columnDef, sortDirection) => {
+        const sortedData = data.sort((a, b) =>
+            this.compareValues(a[columnDef], b[columnDef], sortDirection, columnDef)
+        );
+
+        return sortedData
+            .filter((elem) => elem.bestScore !== 0)
+            .concat(sortedData.filter((elem) => elem.bestScore === 0));
+    }
+
     sortTableByColumn = (columnDef) => {
         const sortDirection =
             this.state.sortColumn === columnDef
                 ? this.getOppositeSortDirection(this.state.sortDirection)
                 : "asc";
-        const sortedTable = this.state.tableData.sort((a, b) =>
-            this.compareValues(a[columnDef], b[columnDef], sortDirection, columnDef)
-        );
 
-        const sortedTableWithoutZeros = sortedTable
-            .filter((elem) => elem.bestScore !== 0)
-            .concat(sortedTable.filter((elem) => elem.bestScore === 0));
+        const sortedTable = this.sortData(this.state.tableData, this.state.sortColumn, sortDirection);
 
         this.setState({
             sortDirection,
             sortColumn: columnDef,
-            tableData: sortedTableWithoutZeros,
+            tableData: sortedTable,
         });
     };
 
