@@ -68,7 +68,7 @@ class AdminDashboard extends React.Component {
     async updateAdminDashBoardTableData() {
         const tableData = await this.api.getAdminDashBoardTable();
         this.setState({
-            tableData: tableData,
+            tableData: this.sortData(tableData, this.state.sortColumn, this.state.sortDirection),
         });
     }
 
@@ -79,7 +79,11 @@ class AdminDashboard extends React.Component {
         });
     }
 
-    compareValues = (a, b, sortDirection) => {
+    compareValues = (a, b, sortDirection, columnDef) => {
+        if (columnDef === 'signUpDate') {
+            a = new Date(a);
+            b = new Date(b);
+        }
         return sortDirection === "asc" ? (a > b ? 1 : -1) : a < b ? 1 : -1;
     };
 
@@ -87,23 +91,31 @@ class AdminDashboard extends React.Component {
         return sortDirection === "asc" ? "desc" : "asc";
     };
 
+    sortData = (data, columnDef, sortDirection) => {
+        const sortedData = data.sort((a, b) =>
+            this.compareValues(a[columnDef], b[columnDef], sortDirection, columnDef)
+        );
+
+        if (columnDef === 'bestScore') {
+            return sortedData
+                .filter((elem) => elem.bestScore !== 0)
+                .concat(sortedData.filter((elem) => elem.bestScore === 0));
+        }
+        return sortedData;
+    }
+
     sortTableByColumn = (columnDef) => {
         const sortDirection =
             this.state.sortColumn === columnDef
                 ? this.getOppositeSortDirection(this.state.sortDirection)
                 : "asc";
-        const sortedTable = this.state.tableData.sort((a, b) =>
-            this.compareValues(a[columnDef], b[columnDef], sortDirection, columnDef)
-        );
 
-        const sortedTableWithoutZeros = sortedTable
-            .filter((elem) => elem.bestScore !== 0)
-            .concat(sortedTable.filter((elem) => elem.bestScore === 0));
+        const sortedTable = this.sortData(this.state.tableData, columnDef, sortDirection);
 
         this.setState({
             sortDirection,
             sortColumn: columnDef,
-            tableData: sortedTableWithoutZeros,
+            tableData: sortedTable,
         });
     };
 
