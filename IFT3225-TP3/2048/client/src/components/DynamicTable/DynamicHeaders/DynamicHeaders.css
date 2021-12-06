@@ -1,0 +1,10 @@
+.header-content {
+    display: flex;
+}
+
+.header-content_sort-arrow {
+    font-size: 10pt;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+}
